@@ -1,9 +1,15 @@
-import { AppProps } from 'next/app'
+import { AppProps } from "next/app";
+import { useEffect } from "react";
+import { updateTheme } from "../lib/theme";
 
-import '../styles/globals.css'
+import "../styles/globals.css";
 
 function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  useEffect(() => {
+    updateTheme();
+  }, []);
+
+  return <Component {...pageProps} />;
 }
 
-export default App
+export default App;
