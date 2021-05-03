@@ -21,4 +21,5 @@ export function changeTheme(theme: ThemeType) {
   } else {
     localStorage.theme = theme;
   }
+  updateTheme();
 }
