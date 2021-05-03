@@ -8,3 +8,17 @@ export function updateTheme() {
     document.documentElement.classList.remove("dark");
   }
 }
+
+export enum ThemeType {
+  light = "light",
+  dark = "dark",
+  default = "default",
+}
+
+export function changeTheme(theme: ThemeType) {
+  if (theme == "default") {
+    localStorage.removeItem('theme')
+  } else {
+    localStorage.theme = theme;
+  }
+}
