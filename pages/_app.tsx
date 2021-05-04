@@ -19,6 +19,8 @@ function App({ Component, pageProps }: AppProps) {
           href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400&family=Mulish&display=swap"
           rel="stylesheet"
         />
+
+        <title>tracki</title>
       </Head>
       <Component {...pageProps} />
     </>
