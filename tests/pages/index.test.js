@@ -7,7 +7,7 @@ describe("App", () => {
   it("renders without crashing", () => {
     render(<App />);
     expect(
-      screen.getByText("Placeholder")
+      screen.getByAltText("black tracki logo")
     ).toBeInTheDocument();
   });
 });
