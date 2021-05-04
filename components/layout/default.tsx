@@ -13,7 +13,7 @@ export default function DefaultLayout({
 }) {
   return (
     <div className="w-full h-full flex flex-col items-center dark:bg-black text-black dark:text-white">
-      <main className={cn("flex-auto", mainClasses)}>{children}</main>
+      <main className={cn("flex-auto max-w-full", mainClasses)}>{children}</main>
       {showFooter && <Footer />}
     </div>
   );
