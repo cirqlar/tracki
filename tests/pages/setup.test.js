@@ -32,5 +32,10 @@ describe("Setup", () => {
     expect(
       pinInput.value
     ).toBe("9182");
+
+    fireEvent.change(pinInput, { target: { value: "" } });
+    expect(
+      pinInput.value
+    ).toBe("");
   })
 });

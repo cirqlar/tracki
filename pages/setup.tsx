@@ -6,7 +6,7 @@ export default function Setup() {
   const [pin, setPin] = useState("");
 
   const handlePinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (/^\d+$/.test(event.target.value)) {
+    if (/^\d+$/.test(event.target.value) || event.target.value == "") {
       setPin(event.target.value);
     }
   };
@@ -20,11 +20,10 @@ export default function Setup() {
       <p className="font-light text-xs sm:text-base pt-3 px-8">
         Tracki encrypts your data before saving it using your pin. <a className="text-blue-500">Learn More</a>.
       </p>
-      <form className="mx-8 flex flex-col items-center">
+      <form className="mx-8 flex flex-col items-center" onSubmit={e => e.preventDefault()}>
         <input
           type="tel"
           inputMode="numeric"
-          pattern="^[0–9]$"
           maxLength={6}
           value={pin}
           onChange={handlePinChange}
