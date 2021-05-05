@@ -34,12 +34,12 @@ export default function Setup() {
         <div>
           <button
             type="submit"
-            className="bg-green-500 rounded uppercase text-white py-2 px-4 text-xs sm:text-base mt-5 inline-block"
+            className="bg-green-500 rounded uppercase text-white py-2 px-4 text-base mt-5 inline-block"
           >
             Continue
           </button>
           <Link href="/">
-            <a className="block sm:inline-block underline text-xs text-red-500 sm:text-base mt-4 sm:mt-0 font-light sm:ml-4">Go Back</a>
+            <a className="block sm:inline-block underline text-red-500 text-base mt-4 sm:mt-0 font-light sm:ml-4">Go Back</a>
           </Link>
         </div>
       </form>
