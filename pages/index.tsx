@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import DefaultLayout from "../components/layout/default";
 
-export default function Home() {
+export default function Index() {
   return (
     <DefaultLayout mainClasses="flex flex-col items-center justify-center">
       <img className="dark:hidden w-[100px] sm:w-[120px]" src="/logo/white-trans.svg" alt="black tracki logo" />
