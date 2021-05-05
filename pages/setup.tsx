@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 
 import DefaultLayout from "../components/layout/default";
@@ -30,12 +31,17 @@ export default function Setup() {
           aria-label="Pin"
           className="bg-gray-300 rounded h-11 w-80 max-w-full mt-4 py-2 px-4 outline-none text-black"
         />
-        <button
-          type="submit"
-          className="bg-green-500 rounded uppercase text-white py-2 px-4 text-xs sm:text-base mt-5 inline-block"
-        >
-          Continue
-        </button>
+        <div>
+          <button
+            type="submit"
+            className="bg-green-500 rounded uppercase text-white py-2 px-4 text-xs sm:text-base mt-5 inline-block"
+          >
+            Continue
+          </button>
+          <Link href="/">
+            <a className="block sm:inline-block underline text-xs text-red-500 sm:text-base mt-4 sm:mt-0 font-light sm:ml-4">Go Back</a>
+          </Link>
+        </div>
       </form>
     </DefaultLayout>
   );
