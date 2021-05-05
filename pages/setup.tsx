@@ -1,7 +1,7 @@
-import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import DefaultLayout from "../components/layout/default";
+import Button from "../components/buttons/default";
 
 export default function Setup() {
   const [pin, setPin] = useState("");
@@ -21,7 +21,7 @@ export default function Setup() {
       <p className="font-light text-xs sm:text-base pt-3 px-8">
         Tracki encrypts your data before saving it using your pin. <a className="text-blue-500">Learn More</a>.
       </p>
-      <form className="mx-8 flex flex-col items-center" onSubmit={e => e.preventDefault()}>
+      <form className="mx-8 flex flex-col items-center" onSubmit={(e) => e.preventDefault()}>
         <input
           type="tel"
           inputMode="numeric"
@@ -32,15 +32,17 @@ export default function Setup() {
           className="bg-gray-300 rounded h-11 w-80 max-w-full mt-4 py-2 px-4 outline-none text-black"
         />
         <div>
-          <button
-            type="submit"
-            className="bg-green-500 rounded uppercase text-white py-2 px-4 text-base mt-5 inline-block"
-          >
+          <Button buttonType="submit" className="mt-5 inline-block">
             Continue
-          </button>
-          <Link href="/">
-            <a className="block sm:inline-block underline text-red-500 text-base mt-4 sm:mt-0 font-light sm:ml-4">Go Back</a>
-          </Link>
+          </Button>
+          <Button
+            href="/"
+            appearance="link"
+            textColor="red"
+            className="mt-4 sm:mt-0 sm:ml-4 font-light block sm:inline-block"
+          >
+            Go Back
+          </Button>
         </div>
       </form>
     </DefaultLayout>
