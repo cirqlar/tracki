@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
 
-import Index from "../../pages/index";
+import Setup from "../../pages/setup";
 
-describe("Home", () => {
+describe("Setup", () => {
   it("renders correctly", () => {
-    render(<Index />);
+    render(<Setup />);
     expect(
-      screen.getByText("tracki")
+      screen.getByText("Set a pin")
     ).toBeInTheDocument();
   });
 });
