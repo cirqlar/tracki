@@ -1,0 +1,94 @@
+{
+  "short_name": "tracki",
+  "name": "tracki",
+  "lang": "en",
+  "description": "a tracker app",
+  "start_url": "/",
+  "background_color": "#000000",
+  "theme_color": "#eb5757",
+  "dir": "ltr",
+  "display": "standalone",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon/favicon-512x512-42605.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/icon/favicon-384x384-42605.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "/icon/favicon-256x256-42605.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/icon/android-192x192-42605.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icon/apple-180x180-42605.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    },
+    {
+      "src": "/icon/apple-152x152-42605.png",
+      "type": "image/png",
+      "sizes": "152x152"
+    },
+    {
+      "src": "/icon/apple-144x144-42605.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/icon/apple-120x120-42605.png",
+      "type": "image/png",
+      "sizes": "120x120"
+    },
+    {
+      "src": "/icon/apple-114x114-42605.png",
+      "type": "image/png",
+      "sizes": "114x114"
+    },
+    {
+      "src": "/icon/favicon-96x96-42605.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/icon/apple-76x76-42605.png",
+      "type": "image/png",
+      "sizes": "76x76"
+    },
+    {
+      "src": "/icon/apple-72x72-42605.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/icon/apple-60x60-42605.png",
+      "type": "image/png",
+      "sizes": "60x60"
+    },
+    {
+      "src": "/icon/apple-57x57-42605.png",
+      "type": "image/png",
+      "sizes": "57x57"
+    },
+    {
+      "src": "/icon/favicon-32x32-42605.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "/icon/favicon-16x16-42605.png",
+      "type": "image/png",
+      "sizes": "16x16"
+    }
+  ]
+}
