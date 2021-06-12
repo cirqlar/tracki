@@ -1,7 +1,14 @@
 import DefaultLayout from "../components/layout/default";
 import Button from "../components/buttons/default";
+import { useEffect } from "react";
+import useDatabase from "../lib/useDatabase";
 
 export default function Index() {
+  const { sendMessage } = useDatabase();
+  useEffect(() => {
+    sendMessage();
+  }, []);
+
   return (
     <DefaultLayout mainClasses="flex flex-col items-center justify-center">
       <img className="dark:hidden w-[100px] sm:w-[120px] h-[100px] sm:h-[120px]" src="/logo/white-trans.svg" alt="black tracki logo" />
