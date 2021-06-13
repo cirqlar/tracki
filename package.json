@@ -10,10 +10,14 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "crypto-js": "^4.0.0",
+    "dexie": "^3.0.3",
     "next": "^10.2.3",
     "next-pwa": "^5.2.21",
+    "post-me": "^0.4.5",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@testing-library/dom": "^7.30.4",
