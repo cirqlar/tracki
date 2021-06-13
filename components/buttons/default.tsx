@@ -19,6 +19,7 @@ type ButtonProps = {
       textColor?: color;
       bgColor?: never;
       underline?: boolean;
+      disabled?: boolean;
     }
   | {
       href?: never;
@@ -28,6 +29,7 @@ type ButtonProps = {
       textColor?: color;
       bgColor?: color;
       underline?: never;
+      disabled?: boolean;
     }
 );
 
@@ -43,6 +45,7 @@ export default function Button({
   textColor,
   underline = true,
   className: classes,
+  disabled,
 }: ButtonProps) {
   const className = cn(
     appearance === "button" && "rounded uppercase py-2 px-4",
@@ -74,6 +77,7 @@ export default function Button({
       {...typeProp}
       onClick={onClick}
       className={className}
+      disabled={disabled}
     >
       {children}
     </button>
