@@ -5,6 +5,15 @@ import Index from "../../pages/index";
 
 window.matchMedia = jest.fn();
 
+jest.mock("../../lib/hooks/useDatabase", () => ({
+  __esModule: true,
+  default: () => ({
+    canLogIn: true,
+    isLoggedIn: true,
+    signIn: () => {},
+  })
+}))
+
 describe("App", () => {
   it("renders app correctly", () => {
     window.matchMedia.mockImplementation(() => {

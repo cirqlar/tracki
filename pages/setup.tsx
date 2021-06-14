@@ -32,5 +32,5 @@ export default function Setup() {
     </>
   ), []);
 
-  return <PinPage title="Set up Pin" subtitle={<Subtitle />} onSubmit={submit} backButton />;
+  return <PinPage title="Set a Pin" subtitle={<Subtitle />} onSubmit={submit} backButton />;
 }
