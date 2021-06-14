@@ -15,24 +15,27 @@ const setUpWorker = async () => {
 const useDatabase = () => {
   const [worker, setWorker] = useState(workerReference);
   const [canLogIn, setCanLogIn] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const setup = async () => {
       await setUpWorker();
       setWorker(workerReference);
-    }
+    };
     setup();
   }, []);
 
   useEffect(() => {
     const initData = async () => {
-      if(sessionStorage.getItem("pin")) {
-        setLoggedIn(true);
-      }
       if (worker) {
-        const userAvailable = await worker.call("userAvailable");
+        const [userAvailable, userLoggedIn] = await Promise.all([
+          worker.call("userAvailable"),
+          worker.call("userLoggedIn"),
+        ]);
+        // const userAvailable = await worker.call("userAvailable");
+        // const userLoggedIn = await worker.call("userLoggedIn");
         setCanLogIn(userAvailable);
+        setIsLoggedIn(userLoggedIn);
       }
     };
     initData();
@@ -44,23 +47,21 @@ const useDatabase = () => {
     const isSignedUp = await worker.call("signUp", key);
     if (!isSignedUp) return Promise.reject("sign up failed");
 
-    sessionStorage.setItem("pin", key.toString());
     setCanLogIn(true);
-    setLoggedIn(true);
+    setIsLoggedIn(true);
     return true;
   };
 
   const signIn = async (key: string) => {
     if (isLoggedIn) return Promise.reject("user already logged in");
     if (!canLogIn) return Promise.reject("there's no user set up");
-    
-    const isVerified = await worker.call("verifyPin", key);
+
+    const isVerified = await worker.call("signIn", key);
     if (!isVerified) return Promise.reject("log in failed");
 
-    sessionStorage.setItem("pin", key.toString());
-    setLoggedIn(true);
+    setIsLoggedIn(true);
     return true;
-  }
+  };
 
   return {
     canLogIn,

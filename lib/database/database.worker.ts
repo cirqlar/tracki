@@ -7,6 +7,7 @@ import { Events, Methods } from "./types";
 
 
 // Replace with viable encryption
+let key: string;
 async function encrypt(data: string, key: string) {
   return AES.encrypt(data, key).toString();
 }
@@ -23,6 +24,9 @@ async function DatabaseWorker() {
       const testPhrase = await db.testPhrase.get(1);    
       return testPhrase.encryptedPhrase ? true : false;
     },
+    async userLoggedIn() {
+      return key ? true : false;
+    },
     async signUp(pin: string) {
       if (await functions.userAvailable()) return false;
       const testPhrase = await db.testPhrase.get(1);
@@ -32,15 +36,19 @@ async function DatabaseWorker() {
       testPhrase.encryptedPhrase = encryptedPhrase;
 
       const dbKey = await db.testPhrase.put(testPhrase);
+      key = pin;
 
       return true;
     },
-    async verifyPin(pin: string) {
+    async signIn(pin: string) {
       if (!(await functions.userAvailable())) return false;
       const testPhrase = await db.testPhrase.get(1);
 
       const decryptedPhrase = await decrypt(testPhrase.encryptedPhrase, pin);
-      return (decryptedPhrase === testPhrase.phrase);
+      const isValid = (decryptedPhrase === testPhrase.phrase);
+      key = isValid ? pin : key;
+
+      return isValid
     },
   };
 
