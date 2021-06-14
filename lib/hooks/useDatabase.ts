@@ -32,8 +32,6 @@ const useDatabase = () => {
           worker.call("userAvailable"),
           worker.call("userLoggedIn"),
         ]);
-        // const userAvailable = await worker.call("userAvailable");
-        // const userLoggedIn = await worker.call("userLoggedIn");
         setCanLogIn(userAvailable);
         setIsLoggedIn(userLoggedIn);
       }
