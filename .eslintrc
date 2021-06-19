@@ -1,3 +1,14 @@
 {
-  "extends": ["next", "next/core-web-vitals"]
+  "extends": ["airbnb", "next", "next/core-web-vitals"],
+  "rules": {
+    "quotes": [
+      2,
+      "double",
+      {
+        "avoidEscape": true,
+        "allowTemplateLiterals": true
+      }
+    ],
+    "react/jsx-filename-extension": [2, { "extensions": [".jsx", ".tsx"] }]
+  }
 }
