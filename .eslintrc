@@ -1,5 +1,9 @@
 {
   "extends": ["airbnb", "next", "next/core-web-vitals"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
   "rules": {
     "quotes": [
       2,
@@ -10,5 +14,10 @@
       }
     ],
     "react/jsx-filename-extension": [2, { "extensions": [".jsx", ".tsx"] }]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }
