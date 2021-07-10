@@ -31,11 +31,17 @@ jobs:
         with:
           node-version: '15.x'
 
-      # Installs packages and runs tests
-      - name: Install and test
-        run: |
-          npm install
-          npm test
+      # Installs packages
+      - name: Install
+        run: npm install
+
+      # Lint files
+      - name: Lint
+        run: npm run lint
+
+      # Run tests
+      - name: Test 
+        run: npm test
           
       # Publish coverage to coveralls
       - name: Coveralls

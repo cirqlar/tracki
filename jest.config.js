@@ -4,6 +4,7 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     "./components/**/*.{js,jsx,ts,tsx}",
+    "!./components/**/_*.{js,jsx,ts,tsx}",
     "./pages/**/*.{js,jsx,ts,tsx}",
     "!./pages/_app.tsx",
     "./lib/**/*.{js,jsx,ts,tsx}",
