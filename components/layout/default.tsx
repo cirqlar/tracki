@@ -9,7 +9,7 @@ export default function DefaultLayout({
   mainClasses,
   showFooter = true,
   showHeader = false,
-  logoType = "",
+  logoType = "-nopad",
 }: {
   children: ReactNode;
   mainClasses?: string;
