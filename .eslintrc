@@ -13,7 +13,9 @@
         "allowTemplateLiterals": true
       }
     ],
-    "react/jsx-filename-extension": [2, { "extensions": [".jsx", ".tsx"] }]
+    "react/jsx-filename-extension": [2, { "extensions": [".jsx", ".tsx"] }],
+    "react/prop-types": "off", // Since we do not use prop-types
+    "react/require-default-props": "off" // Since we do not use prop-types
   },
   "settings": {
     "import/resolver": {
