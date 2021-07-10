@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 
 import "../styles/globals.css";
 
+import HeadTags from "@/components/layout/head";
 import { updateTheme } from "@/lib/util/theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -11,6 +12,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     updateTheme();
   }, []);
 
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <HeadTags />
+      <Component {...pageProps} />
+    </>
+  );
 }
 export default MyApp;
