@@ -1,22 +1,24 @@
-export enum LogoType {
-  circle = "",
-  transparent = "-trans",
-  no_padding = "-nopad",
-}
+import Image from "next/image";
 
-export default function Header({ logo_type }: { logo_type: LogoType }) {
+export default function Header({ logoType = "" }: { logoType: "" | "-trans" | "-nopad" }) {
   return (
     <header className="flex-none w-full">
-      <img
-        className="dark:hidden w-[60px] h-[60px] mx-auto flex-none mt-12"
-        src={`/logo/white${logo_type}.svg`}
-        alt="black tracki logo"
-      />
-      <img
-        className="hidden dark:block w-[60px] h-[60px] mx-auto flex-none mt-12"
-        src={`/logo/black${logo_type}.svg`}
-        alt="white tracki logo"
-      />
+      <div className="dark:hidden mx-auto w-[60px] h-[60px] mt-12">
+        <Image
+          width="60"
+          height="60"
+          src={`/logo/white${logoType}.svg`}
+          alt="black tracki logo"
+        />
+      </div>
+      <div className="hidden dark:block mx-auto w-[60px] h-[60px] mt-12">
+        <Image
+          width="60"
+          height="60"
+          src={`/logo/black${logoType}.svg`}
+          alt="white tracki logo"
+        />
+      </div>
     </header>
   );
 }

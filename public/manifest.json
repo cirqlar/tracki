@@ -31,6 +31,12 @@
       "sizes": "192x192"
     },
     {
+      "src": "/icon/favicon-maskable-192x192-42605.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
       "src": "/icon/apple-180x180-42605.png",
       "type": "image/png",
       "sizes": "180x180"

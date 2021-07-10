@@ -1,12 +1,18 @@
 module.exports = {
-  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
-  setupFilesAfterEnv: ["<rootDir>/setupTests.js"],
-  transform: {
-    "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-  },
-  "moduleNameMapper": {
-    "\\.(css|less|scss|sass)$": "identity-obj-proxy"
-  },
+  testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["./jest.setup.ts"],
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/{pages,components,lib}/**/*.{js,jsx,ts,tsx}'],
+  collectCoverageFrom: [
+    "./components/**/*.{js,jsx,ts,tsx}",
+    "!./components/**/_*.{js,jsx,ts,tsx}",
+    "./pages/**/*.{js,jsx,ts,tsx}",
+    "!./pages/_app.tsx",
+    "./lib/**/*.{js,jsx,ts,tsx}",
+  ],
+  moduleNameMapper: {
+    "^@/pages(.*)$": "<rootDir>/pages$1",
+    "^@/components(.*)$": "<rootDir>/components$1",
+    "^@/lib(.*)$": "<rootDir>/lib$1",
+    "^@/public(.*)$": "<rootDir>/public$1",
+  },
 };

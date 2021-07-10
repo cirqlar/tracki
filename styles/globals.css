@@ -10,16 +10,24 @@
 
   html {
     box-sizing: border-box;
-    font-family: 'Heebo', sans-serif;
+    font-family: "Heebo", sans-serif;
     @apply w-full h-full relative overflow-hidden;
   }
-  *, *:before, *:after {
+  *,
+  *:before,
+  *:after {
     box-sizing: inherit;
   }
-  h1,h2,h3,h4,h5,h6 {
-    font-family: 'Mulish', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Mulish", sans-serif;
   }
-  body, #__next {
+  body,
+  #__next {
     @apply w-full h-full relative overflow-hidden;
   }
 }
