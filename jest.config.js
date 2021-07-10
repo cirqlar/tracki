@@ -12,5 +12,6 @@ module.exports = {
     "^@/pages(.*)$": "<rootDir>/pages$1",
     "^@/components(.*)$": "<rootDir>/components$1",
     "^@/lib(.*)$": "<rootDir>/lib$1",
+    "^@/public(.*)$": "<rootDir>/public$1",
   },
 };
