@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { A } from "solid-start";
 import Counter from "~/components/Counter";
-import useDarkMode from "~/libs/dark-mode";
+import {useDarkMode} from "~/libs/dark-mode";
 import { useUser } from "~/libs/user";
 
 import blackNopad from "~/assets/logos/black-nopad.png";
@@ -10,7 +10,7 @@ import Button from "~/components/styled-elements/button";
 
 export default function Landing() {
   const [userExists] = useUser();
-  const isInDarkMode = useDarkMode();
+  const [isInDarkMode, chooseTheme] = useDarkMode();
 
   return (
     <main class="w-full h-full flex flex-col justify-center items-center">
@@ -27,6 +27,11 @@ export default function Landing() {
           <A href="/about">Terms</A>
           <A href="/about">Privacy</A>
           <a href="/about">Github</a>
+          
+          <button onClick={() => chooseTheme('os')}>OS</button>
+          <Show when={isInDarkMode()} fallback={<button onClick={() => chooseTheme('dark')}>Dark</button>}>
+            <button onClick={() => chooseTheme('light')}>Light</button>
+          </Show>
         </nav>
         <p class="text-[9px] text-center">©2020 Ibitoye Ayanfeoluwa</p>
       </div>
