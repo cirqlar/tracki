@@ -1,21 +1,18 @@
 import { Show } from "solid-js";
 import { A } from "solid-start";
-import { useDarkMode } from "~/libs/dark-mode";
 import { useUser } from "~/libs/user";
 
-import blackNopad from "~/assets/logos/black-nopad.png";
-import whiteNopad from "~/assets/logos/white-nopad.png";
 import Button from "~/components/styled-elements/button";
+import Logo from "~/components/sections/logo";
 
 export default function Landing() {
   const [userExists] = useUser();
-  const [isInDarkMode] = useDarkMode();
 
   return (
     <main class="w-full h-full flex flex-col justify-center items-center">
       <div class="flex flex-col grow justify-center items-center">
-        <img src={isInDarkMode() ? blackNopad : whiteNopad} alt="tracki" />
-        <h2 class="text-4xl my-5 mulish">tracki</h2>
+        <Logo class="w-28 h-28 p-4" />
+        <h2 class="text-4xl mt-1 mb-5 mulish">tracki</h2>
         <Show when={userExists()} fallback={<Button>Begin</Button>}>
           <Button>Enter</Button>
         </Show>
