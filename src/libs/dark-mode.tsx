@@ -2,7 +2,7 @@ import { Accessor, createContext, createSignal, JSX, onCleanup, onMount, useCont
 
 type ThemeInfo = [Accessor<boolean>, (mode: 'light' | 'dark' | 'os') => void];
 
-const ThemeContext = createContext<ThemeInfo>([() => true, () => {}]);
+const ThemeContext = createContext<ThemeInfo>();
 
 const ThemeProvider = (props: JSX.HTMLAttributes<HTMLDivElement>) => {
 	const [isInDarkMode, setIsInDarkMode] = createSignal(true);
@@ -54,7 +54,7 @@ const ThemeProvider = (props: JSX.HTMLAttributes<HTMLDivElement>) => {
 	)
 }
 
-const useDarkMode = () => useContext(ThemeContext);
+const useDarkMode = () => useContext(ThemeContext) as ThemeInfo;
 
 export {
 	ThemeProvider,
