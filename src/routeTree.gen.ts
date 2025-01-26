@@ -8,32 +8,25 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-
-// Create Virtual Routes
-
-const AboutLazyImport = createFileRoute('/about')()
-const homeIndexLazyImport = createFileRoute('/(home)/')()
+import { Route as AboutImport } from './routes/about'
+import { Route as homeIndexImport } from './routes/(home)/index'
 
 // Create/Update Routes
 
-const AboutLazyRoute = AboutLazyImport.update({
+const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+} as any)
 
-const homeIndexLazyRoute = homeIndexLazyImport
-  .update({
-    id: '/(home)/',
-    path: '/',
-    getParentRoute: () => rootRoute,
-  } as any)
-  .lazy(() => import('./routes/(home)/index.lazy').then((d) => d.Route))
+const homeIndexRoute = homeIndexImport.update({
+  id: '/(home)/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -43,14 +36,14 @@ declare module '@tanstack/react-router' {
       id: '/about'
       path: '/about'
       fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
+      preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
     '/(home)/': {
       id: '/(home)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof homeIndexLazyImport
+      preLoaderRoute: typeof homeIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -59,19 +52,19 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/about': typeof AboutLazyRoute
-  '/': typeof homeIndexLazyRoute
+  '/about': typeof AboutRoute
+  '/': typeof homeIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/about': typeof AboutLazyRoute
-  '/': typeof homeIndexLazyRoute
+  '/about': typeof AboutRoute
+  '/': typeof homeIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/about': typeof AboutLazyRoute
-  '/(home)/': typeof homeIndexLazyRoute
+  '/about': typeof AboutRoute
+  '/(home)/': typeof homeIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -84,13 +77,13 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  AboutLazyRoute: typeof AboutLazyRoute
-  homeIndexLazyRoute: typeof homeIndexLazyRoute
+  AboutRoute: typeof AboutRoute
+  homeIndexRoute: typeof homeIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AboutLazyRoute: AboutLazyRoute,
-  homeIndexLazyRoute: homeIndexLazyRoute,
+  AboutRoute: AboutRoute,
+  homeIndexRoute: homeIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -108,10 +101,10 @@ export const routeTree = rootRoute
       ]
     },
     "/about": {
-      "filePath": "about.lazy.tsx"
+      "filePath": "about.tsx"
     },
     "/(home)/": {
-      "filePath": "(home)/index.lazy.tsx"
+      "filePath": "(home)/index.tsx"
     }
   }
 }

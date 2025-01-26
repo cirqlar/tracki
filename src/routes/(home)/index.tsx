@@ -1,11 +1,11 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
 import reactLogo from "@/assets/react.svg";
 import "./App.css";
 
-export const Route = createLazyFileRoute("/(home)/")({
+export const Route = createFileRoute("/(home)/")({
 	component: Index,
 });
 
