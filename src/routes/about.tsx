@@ -14,7 +14,6 @@ function About() {
 					<LeftArrow className="h-full" />
 				</Link>
 				<TrackiTransparent className="h-8 w-8" />
-				{/* div to move logo to center */}
 				<div className="h-8 w-8"></div>
 			</nav>
 
