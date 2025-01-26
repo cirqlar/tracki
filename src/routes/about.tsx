@@ -8,8 +8,8 @@ export const Route = createFileRoute("/about")({
 
 function About() {
 	return (
-		<article aria-labelledby="aboutTitle" className="flex h-full flex-col">
-			<nav className="flex grow-0 items-center justify-between px-6 py-8 md:p-10">
+		<article aria-labelledby="aboutTitle" className="h-full overflow-auto">
+			<nav className="sticky top-0 flex items-center justify-between bg-black px-6 py-8 md:p-10">
 				<Link to="/" className="h-8 w-8">
 					<LeftArrow className="h-full" />
 				</Link>
@@ -18,7 +18,7 @@ function About() {
 				<div className="h-8 w-8"></div>
 			</nav>
 
-			<div className="grow-1 overflow-auto px-6 pb-6 md:px-16 md:pb-16">
+			<div className="px-6 pb-6 md:px-16 md:pb-16">
 				<div className="mx-auto md:max-w-prose">
 					<h1 className="w-full text-2xl md:text-4xl" id="aboutTitle">
 						About tracki
