@@ -1,5 +1,70 @@
 @import "tailwindcss";
 
+@supports (font-variation-settings: "wdth" 115) {
+	@font-face {
+		font-family: "Heebo";
+		font-weight: 100 900;
+		font-style: normal;
+		font-display: swap;
+		src:
+			local("Heebo"),
+			url("/fonts/Heebo/Heebo-VariableFont_wght.ttf") format("truetype");
+	}
+
+	@font-face {
+		font-family: "Mulish";
+		font-weight: 200 1000;
+		font-style: normal;
+		font-display: swap;
+		src:
+			local("Mulish"),
+			url("/fonts/Mulish/Mulish-VariableFont_wght.ttf") format("truetype");
+	}
+
+	@font-face {
+		font-family: "Mulish";
+		font-weight: 200 1000;
+		font-style: italic;
+		font-display: swap;
+		src:
+			local("Mulish"),
+			url("/fonts/Mulish/Mulish-italic-VariableFont_wght.ttf")
+				format("truetype");
+	}
+}
+
+@supports not (font-variation-settings: "wdth" 115) {
+	@font-face {
+		font-family: "Heebo";
+		font-weight: 300;
+		font-style: normal;
+		font-display: swap;
+		src:
+			local("Heebo"),
+			url("/fonts/Heebo/static/Heebo-Light.ttf") format("truetype");
+	}
+	
+	@font-face {
+		font-family: "Heebo";
+		font-weight: 400;
+		font-style: normal;
+		font-display: swap;
+		src:
+			local("Heebo"),
+			url("/fonts/Heebo/static/Heebo-Regular.ttf") format("truetype");
+	}
+
+	@font-face {
+		font-family: "Mulish";
+		font-weight: 400;
+		font-style: normal;
+		font-display: swap;
+		src:
+			local("Mulish"),
+			url("/fonts/Mulish/static/Mulish-Regular.ttf") format("truetype");
+	}
+}
+
 @layer base {
 	body {
 		font-family: "Heebo", serif;
@@ -20,7 +85,9 @@
 		font-style: normal;
 	}
 
-	html, body, #root {
+	html,
+	body,
+	#root {
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
