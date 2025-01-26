@@ -9,7 +9,7 @@ export const Route = createFileRoute("/about")({
 function About() {
 	return (
 		<article aria-labelledby="aboutTitle" className="flex h-full flex-col">
-			<nav className="flex grow-0 items-center justify-between px-6 py-8 md:px-16 md:py-16">
+			<nav className="flex grow-0 items-center justify-between px-6 py-8 md:p-10">
 				<Link to="/" className="h-8 w-8">
 					<LeftArrow className="h-full" />
 				</Link>

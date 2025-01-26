@@ -11,7 +11,7 @@ function RouteComponent() {
 		<div className="flex grow flex-col items-center md:justify-center">
 			<Link
 				to="/"
-				className="absolute top-8 left-6 h-8 w-8 md:top-16 md:left-16"
+				className="absolute top-8 left-6 h-8 w-8 md:top-10 md:left-10"
 			>
 				<LeftArrow className="h-full" />
 			</Link>

@@ -6,7 +6,7 @@ export const Route = createFileRoute("/(index)/_index")({
 
 function RouteComponent() {
 	return (
-		<main className="flex h-full w-full flex-col items-center p-4 md:p-16">
+		<main className="flex h-full w-full flex-col items-center p-4 md:p-10">
 			<Outlet />
 
 			<div className="grow-0 text-center text-gray-400">
