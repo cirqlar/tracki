@@ -1,7 +1,13 @@
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
+
+import reactLogo from "@/assets/react.svg";
 import "./App.css";
+
+export const Route = createLazyFileRoute("/(home)/")({
+	component: Index,
+});
 
 function greet_inner(name: string) {
 	return `Hello, ${name}! You've been greeted from JS!`;
@@ -15,7 +21,7 @@ async function greet(name: string) {
 	}
 }
 
-function App() {
+function Index() {
 	const [greetMsg, setGreetMsg] = useState("");
 	const [name, setName] = useState("");
 
@@ -71,5 +77,3 @@ function App() {
 		</main>
 	);
 }
-
-export default App;
