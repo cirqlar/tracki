@@ -8,13 +8,26 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
-import { Route as homeIndexImport } from './routes/(home)/index'
+import { Route as indexIndexImport } from './routes/(index)/_index'
+import { Route as indexIndexIndexImport } from './routes/(index)/_index.index'
+import { Route as indexIndexBeginImport } from './routes/(index)/_index.begin'
+
+// Create Virtual Routes
+
+const indexImport = createFileRoute('/(index)')()
 
 // Create/Update Routes
+
+const indexRoute = indexImport.update({
+  id: '/(index)',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AboutRoute = AboutImport.update({
   id: '/about',
@@ -22,10 +35,21 @@ const AboutRoute = AboutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const homeIndexRoute = homeIndexImport.update({
-  id: '/(home)/',
+const indexIndexRoute = indexIndexImport.update({
+  id: '/_index',
+  getParentRoute: () => indexRoute,
+} as any)
+
+const indexIndexIndexRoute = indexIndexIndexImport.update({
+  id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => indexIndexRoute,
+} as any)
+
+const indexIndexBeginRoute = indexIndexBeginImport.update({
+  id: '/begin',
+  path: '/begin',
+  getParentRoute: () => indexIndexRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -39,51 +63,107 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/(home)/': {
-      id: '/(home)/'
+    '/(index)': {
+      id: '/(index)'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof homeIndexImport
+      preLoaderRoute: typeof indexImport
       parentRoute: typeof rootRoute
+    }
+    '/(index)/_index': {
+      id: '/(index)/_index'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof indexIndexImport
+      parentRoute: typeof indexRoute
+    }
+    '/(index)/_index/begin': {
+      id: '/(index)/_index/begin'
+      path: '/begin'
+      fullPath: '/begin'
+      preLoaderRoute: typeof indexIndexBeginImport
+      parentRoute: typeof indexIndexImport
+    }
+    '/(index)/_index/': {
+      id: '/(index)/_index/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof indexIndexIndexImport
+      parentRoute: typeof indexIndexImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface indexIndexRouteChildren {
+  indexIndexBeginRoute: typeof indexIndexBeginRoute
+  indexIndexIndexRoute: typeof indexIndexIndexRoute
+}
+
+const indexIndexRouteChildren: indexIndexRouteChildren = {
+  indexIndexBeginRoute: indexIndexBeginRoute,
+  indexIndexIndexRoute: indexIndexIndexRoute,
+}
+
+const indexIndexRouteWithChildren = indexIndexRoute._addFileChildren(
+  indexIndexRouteChildren,
+)
+
+interface indexRouteChildren {
+  indexIndexRoute: typeof indexIndexRouteWithChildren
+}
+
+const indexRouteChildren: indexRouteChildren = {
+  indexIndexRoute: indexIndexRouteWithChildren,
+}
+
+const indexRouteWithChildren = indexRoute._addFileChildren(indexRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
-  '/': typeof homeIndexRoute
+  '/': typeof indexIndexIndexRoute
+  '/begin': typeof indexIndexBeginRoute
 }
 
 export interface FileRoutesByTo {
   '/about': typeof AboutRoute
-  '/': typeof homeIndexRoute
+  '/begin': typeof indexIndexBeginRoute
+  '/': typeof indexIndexIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/about': typeof AboutRoute
-  '/(home)/': typeof homeIndexRoute
+  '/(index)': typeof indexRouteWithChildren
+  '/(index)/_index': typeof indexIndexRouteWithChildren
+  '/(index)/_index/begin': typeof indexIndexBeginRoute
+  '/(index)/_index/': typeof indexIndexIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/about' | '/'
+  fullPaths: '/about' | '/' | '/begin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/'
-  id: '__root__' | '/about' | '/(home)/'
+  to: '/about' | '/begin' | '/'
+  id:
+    | '__root__'
+    | '/about'
+    | '/(index)'
+    | '/(index)/_index'
+    | '/(index)/_index/begin'
+    | '/(index)/_index/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
-  homeIndexRoute: typeof homeIndexRoute
+  indexRoute: typeof indexRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
-  homeIndexRoute: homeIndexRoute,
+  indexRoute: indexRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -97,14 +177,33 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/about",
-        "/(home)/"
+        "/(index)"
       ]
     },
     "/about": {
       "filePath": "about.tsx"
     },
-    "/(home)/": {
-      "filePath": "(home)/index.tsx"
+    "/(index)": {
+      "filePath": "(index)",
+      "children": [
+        "/(index)/_index"
+      ]
+    },
+    "/(index)/_index": {
+      "filePath": "(index)/_index.tsx",
+      "parent": "/(index)",
+      "children": [
+        "/(index)/_index/begin",
+        "/(index)/_index/"
+      ]
+    },
+    "/(index)/_index/begin": {
+      "filePath": "(index)/_index.begin.tsx",
+      "parent": "/(index)/_index"
+    },
+    "/(index)/_index/": {
+      "filePath": "(index)/_index.index.tsx",
+      "parent": "/(index)/_index"
     }
   }
 }
