@@ -8,7 +8,7 @@
 		font-display: swap;
 		src:
 			local("Heebo"),
-			url("./assets/fonts/Heebo/Heebo-VariableFont_wght.ttf")
+			url("../src/assets/fonts/Heebo/Heebo-VariableFont_wght.ttf")
 				format("truetype");
 	}
 
@@ -19,7 +19,7 @@
 		font-display: swap;
 		src:
 			local("Mulish"),
-			url("./assets/fonts/Mulish/Mulish-VariableFont_wght.ttf")
+			url("../src/assets/fonts/Mulish/Mulish-VariableFont_wght.ttf")
 				format("truetype");
 	}
 
@@ -30,7 +30,7 @@
 		font-display: swap;
 		src:
 			local("Mulish"),
-			url("./assets/fonts/Mulish/Mulish-italic-VariableFont_wght.ttf")
+			url("../src/assets/fonts/Mulish/Mulish-italic-VariableFont_wght.ttf")
 				format("truetype");
 	}
 }
@@ -43,7 +43,7 @@
 		font-display: swap;
 		src:
 			local("Heebo"),
-			url("./assets/fonts/Heebo/static/Heebo-Light.ttf")
+			url("../src/assets/fonts/Heebo/static/Heebo-Light.ttf")
 				format("truetype");
 	}
 
@@ -54,7 +54,7 @@
 		font-display: swap;
 		src:
 			local("Heebo"),
-			url("./assets/fonts/Heebo/static/Heebo-Regular.ttf")
+			url("../src/assets/fonts/Heebo/static/Heebo-Regular.ttf")
 				format("truetype");
 	}
 
@@ -65,7 +65,7 @@
 		font-display: swap;
 		src:
 			local("Mulish"),
-			url("./assets/fonts/Mulish/static/Mulish-Regular.ttf")
+			url("../src/assets/fonts/Mulish/static/Mulish-Regular.ttf")
 				format("truetype");
 	}
 }
