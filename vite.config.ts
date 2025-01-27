@@ -27,7 +27,7 @@ export default defineConfig(async () => {
 			...baseConfig,
 			plugins: [...baseConfig.plugins, vercel()],
 			vercel: {
-				rewrites: [{ source: "/app/*", destination: "/" }],
+				rewrites: [{ source: "/app/:path*", destination: "/" }],
 			},
 		};
 	} else {
