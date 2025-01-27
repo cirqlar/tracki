@@ -23,7 +23,13 @@ export default defineConfig(async () => {
 	};
 
 	if (WITHOUT_TAURI) {
-		return { ...baseConfig, plugins: [...baseConfig.plugins, vercel()] };
+		return {
+			...baseConfig,
+			plugins: [...baseConfig.plugins, vercel()],
+			vercel: {
+				rewrites: [{ source: "/app/*", destination: "/" }],
+			},
+		};
 	} else {
 		return {
 			...baseConfig,

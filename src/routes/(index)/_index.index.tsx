@@ -11,7 +11,7 @@ function Index() {
 			<TrackiTransparent className="mb-4 h-16 w-16" />
 			<h1 className="mb-5 text-4xl">tracki</h1>
 			<Link
-				to="/begin"
+				to="/app/begin"
 				className="mb-4 rounded-sm bg-green-600 px-5 py-2 font-normal text-white uppercase"
 			>
 				Begin

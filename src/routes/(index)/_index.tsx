@@ -11,7 +11,7 @@ function RouteComponent() {
 
 			<div className="grow-0 text-center text-gray-400">
 				<div className="mb-3 flex justify-center gap-3">
-					<Link to="/about">About</Link>
+					<Link to="/app/about">About</Link>
 					<a href="/">Github</a>
 				</div>
 				<p className="text-xs font-normal">
