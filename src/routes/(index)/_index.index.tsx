@@ -12,7 +12,7 @@ function Index() {
 			<h1 className="mb-5 text-4xl">tracki</h1>
 			<Link
 				to="/app/begin"
-				className="mb-4 rounded-sm bg-green-600 px-5 py-2 font-normal text-white uppercase"
+				className="mb-4 rounded-sm bg-primary px-5 py-2 font-normal text-white uppercase"
 			>
 				Begin
 			</Link>

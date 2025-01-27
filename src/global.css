@@ -73,6 +73,8 @@
 @theme {
 	--font-heading: Mulish, var(--font-sans);
 	--font-body: Heebo, var(--font-sans);
+
+	--color-primary: #eb5757;
 }
 
 @layer base {

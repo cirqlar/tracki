@@ -2,7 +2,7 @@ import LeftArrow from '@/components/icons/left-arrow'
 import TrackiTransparent from '@/components/icons/logo-trans-nopad'
 import { createFileRoute, Link } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/app/about')({
+export const Route = createFileRoute('/app_/about')({
   component: About,
 })
 
