@@ -53,7 +53,7 @@ function RouteComponent() {
 				show={showAddFieldModal}
 				onRequestClose={() => setShowModal(false)}
 			>
-				<div>Modal Content</div>
+				<div>Add Field Modal</div>
 
 				<button
 					className="mt-4 w-full rounded-sm bg-primary px-4 py-2 text-xs font-normal text-white uppercase"
@@ -62,7 +62,7 @@ function RouteComponent() {
 						setShowModal(false);
 					}}
 				>
-					Why even?
+					Close
 				</button>
 			</Modal>
 		</form>
