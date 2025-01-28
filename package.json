@@ -18,8 +18,8 @@
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-sql": "^2.2.0",
     "dexie": "^4.0.11",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^0.0.0-experimental-37906d4d-20250127",
+    "react-dom": "^0.0.0-experimental-37906d4d-20250127",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
@@ -34,7 +34,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^9.19.0",
     "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-hooks": "^0.0.0-experimental-37906d4d-20250127",
     "globals": "^15.14.0",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
