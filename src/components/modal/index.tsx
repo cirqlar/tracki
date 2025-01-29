@@ -6,6 +6,7 @@ import React, {
 	useMemo,
 	useState,
 	experimental_useEffectEvent as useEffectEvent,
+	useRef,
 } from "react";
 
 interface ModalElem {
@@ -31,6 +32,8 @@ export function Modal(props: {
 	const modalfns = useContext(ModalContext);
 	const [id, setId] = useState<number>();
 
+	const unmountedRef = useRef(false);
+
 	const addOurElem = useEffectEvent(
 		(
 			comp: React.ReactNode,
@@ -44,18 +47,23 @@ export function Modal(props: {
 		modalfns.removeElem(id!);
 		setId(undefined);
 	});
-	const shouldAdd = useEffectEvent(() => id === undefined);
+	const eventID = useEffectEvent(() => id);
 	const shouldRemove = useEffectEvent(() => !props.show);
 
 	useEffect(() => {
-		if (props.show && shouldAdd()) {
+		unmountedRef.current = false;
+		if (props.show) {
 			addOurElem(props.children, props.onRequestClose);
-		} else if (!props.show) {
+		} else if (shouldRemove() && eventID()) {
 			removeOurElem();
 		}
 
 		return () => {
-			if (shouldRemove()) removeOurElem();
+			unmountedRef.current = true;
+			setTimeout(() => {
+				if ((unmountedRef.current || shouldRemove()) && eventID())
+					removeOurElem();
+			}, 4);
 		};
 	}, [props.children, props.show, props.onRequestClose]);
 
