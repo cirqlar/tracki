@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, Suspense, useState } from "react";
 
 import { FIELDS, type Field } from "@/components/fields";
 import { Modal } from "@/components/modal";
@@ -76,17 +76,15 @@ function RouteComponent() {
 				</div>
 			))}
 
-			<div className="flex w-full items-center justify-center rounded-sm border-2 border-dashed p-4">
-				<button
-					type="button"
-					className="font-normal"
-					onClick={() => {
-						setShowModal(true);
-					}}
-				>
-					Add field
-				</button>
-			</div>
+			<button
+				type="button"
+				onClick={() => {
+					setShowModal(true);
+				}}
+				className="flex w-full items-center justify-center rounded-sm border-2 border-dashed p-4 font-normal"
+			>
+				Add field
+			</button>
 
 			<button
 				type="submit"
@@ -122,9 +120,11 @@ function RouteComponent() {
 									}}
 								>
 									<div className="flex aspect-square w-full items-center justify-center rounded-sm bg-primary-dark p-4">
-										<fieldType.AddMenuIcon
-											variant={fieldType.variants}
-										/>
+										<Suspense fallback={"Loading"}>
+											<fieldType.AddMenuIcon
+												variant={fieldType.variants}
+											/>
+										</Suspense>
 									</div>
 									<p className="text-sm">
 										{fieldType.friendlyName(
@@ -153,7 +153,11 @@ function RouteComponent() {
 								}}
 							>
 								<div className="flex aspect-square w-full items-center justify-center rounded-sm bg-primary-dark p-4">
-									<fieldType.AddMenuIcon variant={variant} />
+									<Suspense fallback={"Loading"}>
+										<fieldType.AddMenuIcon
+											variant={variant}
+										/>
+									</Suspense>
 								</div>
 								<p className="text-sm">
 									{fieldType.friendlyName(variant)}
