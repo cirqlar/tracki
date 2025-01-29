@@ -149,7 +149,7 @@ export default function ModalProvider(props: { children: React.ReactNode }) {
 				{elems.map((elem, i) => (
 					<div
 						key={elemIds[i]}
-						className={`absolute top-1/2 left-1/2 w-9/10 max-w-xs -translate-x-1/2 -translate-y-1/2 rounded-sm bg-green-300 p-6 transition-all transition-discrete duration-500 dark:bg-green-950 starting:scale-75 starting:opacity-0 ${i === elemIds.length - 1 ? "block" : "hidden"}`}
+						className={`bg-primary-lightest absolute top-1/2 left-1/2 w-9/10 max-w-xs -translate-x-1/2 -translate-y-1/2 rounded-sm p-6 transition-all transition-discrete duration-500 dark:bg-primary-darkest starting:scale-75 starting:opacity-0 ${i === elemIds.length - 1 ? "block" : "hidden"}`}
 					>
 						{elem.comp}
 					</div>

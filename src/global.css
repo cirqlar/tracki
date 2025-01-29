@@ -75,6 +75,17 @@
 	--font-body: Heebo, var(--font-sans);
 
 	--color-primary: #eb5757;
+	--color-primary-darkest: color-mix(
+		in oklch,
+		var(--color-primary),
+		black 70%
+	);
+	--color-primary-dark: color-mix(in oklch, var(--color-primary), black 50%);
+	--color-primary-lightest: color-mix(
+		in oklch,
+		var(--color-primary),
+		white 70%
+	);
 }
 
 @layer base {
