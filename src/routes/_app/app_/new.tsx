@@ -63,16 +63,18 @@ function RouteComponent() {
 			{fields.map((field, i) => (
 				<div key={i}>
 					Field {i} is a {field.friendlyName(field.variant)} field.
-					<field.NewThingComponent
-						fieldSettings={field.fieldData}
-						variant={field.variant}
-						updateFieldData={(newData) =>
-							setFields((fields) => {
-								fields[i].fieldData = newData;
-								return [...fields];
-							})
-						}
-					/>
+					<Suspense fallback={"Loading"}>
+						<field.NewThingComponent
+							fieldSettings={field.fieldData}
+							variant={field.variant}
+							updateFieldData={(newData) =>
+								setFields((fields) => {
+									fields[i].fieldData = newData;
+									return [...fields];
+								})
+							}
+						/>
+					</Suspense>
 				</div>
 			))}
 
@@ -170,7 +172,6 @@ function RouteComponent() {
 				<button
 					className="mt-4 w-full rounded-sm bg-primary px-4 py-2 text-xs font-normal text-white uppercase"
 					onClick={() => {
-						setFields([]);
 						setShowModal(false);
 					}}
 				>
