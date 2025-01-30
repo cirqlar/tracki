@@ -1,7 +1,9 @@
 import { Field } from "@/components/fields";
 
-interface DateSettings {
-	red: boolean;
+export type DateType = "anytime" | "specific";
+
+export interface DateSettings {
+	type: DateType;
 }
 
 export type DateField = Field<DateSettings>;

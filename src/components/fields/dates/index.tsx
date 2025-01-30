@@ -1,4 +1,3 @@
-import { Field } from "@/components/fields";
 import { type DateField } from "./types";
 import { lazy } from "react";
 
@@ -31,4 +30,4 @@ const dateField: DateField = {
 	DisplayEntryComponent: lazy(() => import("./displayEntry")),
 };
 
-export default dateField as Field<unknown>;
+export default dateField;
