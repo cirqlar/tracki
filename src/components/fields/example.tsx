@@ -32,7 +32,6 @@ const DisplayEntryComponent: NewField["DisplayEntryComponent"] = (_props) => {
 const newField: NewField = {
 	id: "newFieldId",
 	friendlyName: () => "New Field Friendly Name",
-	variants: "default", // ["default"],
 	fieldSettingsToSchemaString,
 	NewThingComponent,
 	AddMenuIcon,
