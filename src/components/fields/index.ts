@@ -1,13 +1,11 @@
 import dateField from "./dates";
+import optionsField from "./options";
+import rangeField from "./ranges";
+import textField from "./text";
 
 interface FieldNewThingProps<T> {
-	variant: string;
 	fieldSettings?: T;
 	updateFieldData: (fieldSettings?: T) => unknown;
-}
-
-interface FieldAddMenuProps {
-	variant: string;
 }
 
 interface FieldAddEntryProps {
@@ -21,15 +19,17 @@ interface FieldDisplayEntryProps {
 
 export interface Field<T> {
 	id: string;
-	friendlyName: (variant: string) => string;
-	variants: string | string[];
+	friendlyName: () => string;
 	fieldSettingsToSchemaString: (fieldSettings?: T) => string;
 	NewThingComponent: (props: FieldNewThingProps<T>) => React.ReactNode;
-	AddMenuIcon: (props: FieldAddMenuProps) => React.ReactNode;
+	AddMenuIcon: (props: unknown) => React.ReactNode;
 	AddEntryComponent: (props: FieldAddEntryProps) => React.ReactNode;
 	DisplayEntryComponent: (props: FieldDisplayEntryProps) => React.ReactNode;
 }
 
-export const FIELDS: { [key: string]: Field<unknown> } = {
-	[dateField.id]: dateField as Field<unknown>,
-};
+export const FIELDS = {
+	[dateField.id]: dateField,
+	[textField.id]: textField,
+	[rangeField.id]: rangeField,
+	[optionsField.id]: optionsField,
+} as { [key: string]: Field<unknown> };

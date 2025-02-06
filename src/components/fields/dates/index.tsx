@@ -1,16 +1,8 @@
 import { type DateField } from "./types";
 import { lazy } from "react";
 
-const friendlyName: DateField["friendlyName"] = (variant) => {
-	switch (variant) {
-		case "date-only":
-			return "Date";
-		case "time-only":
-			return "Time";
-		case "default":
-		default:
-			return "Date & Time";
-	}
+const friendlyName: DateField["friendlyName"] = () => {
+	return "Date & Time";
 };
 
 const fieldSettingsToSchemaString: DateField["fieldSettingsToSchemaString"] = (
@@ -22,7 +14,6 @@ const fieldSettingsToSchemaString: DateField["fieldSettingsToSchemaString"] = (
 const dateField: DateField = {
 	id: "fields/date/0001",
 	friendlyName,
-	variants: ["default", "date-only", "time-only"],
 	fieldSettingsToSchemaString,
 	NewThingComponent: lazy(() => import("./newThing")),
 	AddMenuIcon: lazy(() => import("./addMenu")),

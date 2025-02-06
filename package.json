@@ -20,6 +20,7 @@
     "dexie": "^4.0.11",
     "react": "^0.0.0-experimental-37906d4d-20250127",
     "react-dom": "^0.0.0-experimental-37906d4d-20250127",
+    "react-icons": "^5.4.0",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
-import LeftArrow from "@/components/icons/left-arrow";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+
+import LeftArrow from "@/components/icons/left-arrow";
 
 export const Route = createFileRoute("/_app")({
 	component: RouteComponent,

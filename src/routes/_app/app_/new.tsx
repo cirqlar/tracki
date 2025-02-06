@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { FormEventHandler, Suspense, useState } from "react";
+// import { MdAdd } from "react-icons/md";
 
 import { FIELDS, type Field } from "@/components/fields";
 import { Modal } from "@/components/modal";
@@ -14,7 +15,6 @@ export const Route = createFileRoute("/_app/app_/new")({
 
 interface AddThingField<T> extends Field<T> {
 	fieldSettings?: T;
-	variant: string;
 	name: string;
 }
 
@@ -22,7 +22,11 @@ function RouteComponent() {
 	const [fields, setFields] = useState<AddThingField<unknown>[]>([]);
 	const [defaultDateField, setDefaultDateField] = useState<
 		AddThingField<DateSettings>
-	>({ ...dateField, variant: "default", name: "DefaultDate" });
+	>({
+		...dateField,
+		name: "DefaultDate",
+		fieldSettings: { variant: "date-only", type: "anytime" },
+	});
 
 	const [showAddFieldModal, setShowModal] = useState(false);
 
@@ -76,31 +80,38 @@ function RouteComponent() {
 					<div className="mb-2 flex w-full items-baseline justify-between">
 						<p className="">Created Date (required)</p>
 
-						<fieldset>
-							<label>
+						<fieldset className="flex gap-2 text-xs">
+							<label className="has-[>input:checked]:text-primary">
 								Date & Time
 								<input
 									onChange={(e) => {
 										if (e.target.checked)
 											setDefaultDateField((prev) => ({
 												...prev,
-												variant: "default",
+												fieldSettings: {
+													...prev.fieldSettings!,
+													variant: "date-time",
+												},
 											}));
 									}}
 									type="radio"
+									defaultChecked
 									name="defaultDateVariant"
 									id="Default"
 									className="hidden"
 								/>
 							</label>
-							<label>
+							<label className="has-[>input:checked]:text-primary">
 								Date
 								<input
 									onChange={(e) => {
 										if (e.target.checked)
 											setDefaultDateField((prev) => ({
 												...prev,
-												variant: "date-only",
+												fieldSettings: {
+													...prev.fieldSettings!,
+													variant: "date-only",
+												},
 											}));
 									}}
 									type="radio"
@@ -109,14 +120,17 @@ function RouteComponent() {
 									className="hidden"
 								/>
 							</label>
-							<label>
+							<label className="has-[>input:checked]:text-primary">
 								Time
 								<input
 									onChange={(e) => {
 										if (e.target.checked)
 											setDefaultDateField((prev) => ({
 												...prev,
-												variant: "time-only",
+												fieldSettings: {
+													...prev.fieldSettings!,
+													variant: "time-only",
+												},
 											}));
 									}}
 									type="radio"
@@ -129,7 +143,6 @@ function RouteComponent() {
 					</div>
 					<Suspense fallback={"Loading"}>
 						<DateNewThingComponent
-							variant={defaultDateField.variant}
 							fieldSettings={defaultDateField.fieldSettings}
 							updateFieldData={(update) => {
 								setDefaultDateField((prev) => ({
@@ -145,12 +158,10 @@ function RouteComponent() {
 			<div className="mt-4 flex w-full flex-col gap-4">
 				{fields.map((field, i) => (
 					<div key={i}>
-						Field {i} is a {field.friendlyName(field.variant)}{" "}
-						field.
+						Field {i} is a {field.friendlyName()} field.
 						<Suspense fallback={"Loading"}>
 							<field.NewThingComponent
 								fieldSettings={field.fieldSettings}
-								variant={field.variant}
 								updateFieldData={(newData) =>
 									setFields((fields) => {
 										fields[i].fieldSettings = newData;
@@ -180,50 +191,15 @@ function RouteComponent() {
 
 					<div className="grid grid-cols-[repeat(auto-fit,_minmax(60px,1fr))] gap-2">
 						{Object.values(FIELDS).map((fieldType) => {
-							if (typeof fieldType.variants === "string") {
-								return (
-									<button
-										className="flex w-full flex-col items-center gap-2"
-										onClick={() => {
-											setFields((fields) => [
-												...fields,
-												{
-													...fieldType,
-													variant:
-														fieldType.variants as string,
-													fieldSettings: {},
-													name: "",
-												},
-											]);
-											setShowModal(false);
-										}}
-									>
-										<div className="flex aspect-square w-full items-center justify-center rounded-sm bg-primary-dark p-4">
-											<Suspense fallback={"Loading"}>
-												<fieldType.AddMenuIcon
-													variant={fieldType.variants}
-												/>
-											</Suspense>
-										</div>
-										<p className="text-sm">
-											{fieldType.friendlyName(
-												fieldType.variants,
-											)}
-										</p>
-									</button>
-								);
-							}
-
-							return fieldType.variants.map((variant) => (
+							return (
 								<button
-									key={`${fieldType.id}-${variant}`}
+									key={`${fieldType.id}`}
 									className="flex w-full flex-col items-center gap-2"
 									onClick={() => {
 										setFields((fields) => [
 											...fields,
 											{
 												...fieldType,
-												variant,
 												fieldSettings: {},
 												name: "",
 											},
@@ -233,16 +209,14 @@ function RouteComponent() {
 								>
 									<div className="flex aspect-square w-full items-center justify-center rounded-sm bg-primary-dark p-4">
 										<Suspense fallback={"Loading"}>
-											<fieldType.AddMenuIcon
-												variant={variant}
-											/>
+											<fieldType.AddMenuIcon />
 										</Suspense>
 									</div>
 									<p className="text-sm">
-										{fieldType.friendlyName(variant)}
+										{fieldType.friendlyName()}
 									</p>
 								</button>
-							));
+							);
 						})}
 					</div>
 
