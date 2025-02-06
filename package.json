@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "nt-dev": "cross-env WITHOUT_TAURI=1 npm run dev",
-    "nt-build": "cross-env WITHOUT_TAURI=1 npm run build"
+    "nt-build": "cross-env WITHOUT_TAURI=1 npm run build",
+    "check:types": "tsc",
+    "check:lint": "eslint",
+    "check": "npm run check:types && npm run check:lint"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.0",

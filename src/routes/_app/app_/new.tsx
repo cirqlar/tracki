@@ -25,7 +25,7 @@ function RouteComponent() {
 	>({
 		...dateField,
 		name: "DefaultDate",
-		fieldSettings: { variant: "date-only", type: "anytime" },
+		fieldSettings: { type: "anytime" },
 	});
 
 	const [showAddFieldModal, setShowModal] = useState(false);
@@ -79,67 +79,6 @@ function RouteComponent() {
 				<div>
 					<div className="mb-2 flex w-full items-baseline justify-between">
 						<p className="">Created Date (required)</p>
-
-						<fieldset className="flex gap-2 text-xs">
-							<label className="has-[>input:checked]:text-primary">
-								Date & Time
-								<input
-									onChange={(e) => {
-										if (e.target.checked)
-											setDefaultDateField((prev) => ({
-												...prev,
-												fieldSettings: {
-													...prev.fieldSettings!,
-													variant: "date-time",
-												},
-											}));
-									}}
-									type="radio"
-									defaultChecked
-									name="defaultDateVariant"
-									id="Default"
-									className="hidden"
-								/>
-							</label>
-							<label className="has-[>input:checked]:text-primary">
-								Date
-								<input
-									onChange={(e) => {
-										if (e.target.checked)
-											setDefaultDateField((prev) => ({
-												...prev,
-												fieldSettings: {
-													...prev.fieldSettings!,
-													variant: "date-only",
-												},
-											}));
-									}}
-									type="radio"
-									name="defaultDateVariant"
-									id="Date"
-									className="hidden"
-								/>
-							</label>
-							<label className="has-[>input:checked]:text-primary">
-								Time
-								<input
-									onChange={(e) => {
-										if (e.target.checked)
-											setDefaultDateField((prev) => ({
-												...prev,
-												fieldSettings: {
-													...prev.fieldSettings!,
-													variant: "time-only",
-												},
-											}));
-									}}
-									type="radio"
-									name="defaultDateVariant"
-									id="Time"
-									className="hidden"
-								/>
-							</label>
-						</fieldset>
 					</div>
 					<Suspense fallback={"Loading"}>
 						<DateNewThingComponent

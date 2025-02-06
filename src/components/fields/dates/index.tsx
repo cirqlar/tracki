@@ -1,10 +1,6 @@
 import { type DateField } from "./types";
 import { lazy } from "react";
 
-const friendlyName: DateField["friendlyName"] = () => {
-	return "Date & Time";
-};
-
 const fieldSettingsToSchemaString: DateField["fieldSettingsToSchemaString"] = (
 	fieldSettings,
 ) => {
@@ -13,7 +9,7 @@ const fieldSettingsToSchemaString: DateField["fieldSettingsToSchemaString"] = (
 
 const dateField: DateField = {
 	id: "fields/date/0001",
-	friendlyName,
+	friendlyName: () => "Date & Time",
 	fieldSettingsToSchemaString,
 	NewThingComponent: lazy(() => import("./newThing")),
 	AddMenuIcon: lazy(() => import("./addMenu")),

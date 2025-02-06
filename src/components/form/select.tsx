@@ -7,13 +7,14 @@ type SelectProps<T> = React.DetailedHTMLProps<
 > & {
 	options: T[];
 	formatOptionLabel?: (option: T) => React.ReactNode;
+	divClassName?: string;
 };
 
 export default function Select<
 	T extends string | number | { value: string | number; label?: string },
->({ formatOptionLabel, options, ...props }: SelectProps<T>) {
+>({ formatOptionLabel, options, divClassName, ...props }: SelectProps<T>) {
 	return (
-		<div className="relative">
+		<div className={`relative ${divClassName}`}>
 			<select
 				{...props}
 				className="w-full appearance-none rounded-sm border-2 border-black bg-white py-2 pr-6 pl-4 outline-none focus-visible:border-current dark:bg-black"

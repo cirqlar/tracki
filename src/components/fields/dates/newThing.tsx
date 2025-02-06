@@ -24,55 +24,58 @@ type EveryDate = "day" | "week" | "month" | "year";
 
 const NewThingComponent: DateField["NewThingComponent"] = ({
 	updateFieldData,
-	fieldSettings,
 }) => {
-	const [type, setType] = useState<DateType>("anytime");
+	const [type] = useState<DateType>("anytime");
 	const [everyDate, setEveryDate] = useState<EveryDate>("day");
 	const [everyDateFreq, setEveryDateFreq] = useState(1);
+
+	const [dateType, setDateType] = useState<DateType>("anytime");
+	const [timeType, setTimeType] = useState<DateType>("anytime");
 
 	const updateData = useEffectEvent((fieldSettings: DateSettings) => {
 		updateFieldData(fieldSettings);
 	});
-	const getVariant = useEffectEvent(() => fieldSettings!.variant);
 
 	useEffect(() => {
 		updateData({
 			type,
-			variant: getVariant(),
 		});
 	}, [type]);
 
-	const variant = fieldSettings?.variant;
-
-	const title =
-		variant === "date-time"
-			? "Date & Time Settings"
-			: variant === "date-only"
-				? "Date Settings"
-				: "Time Settings";
-	const specificLabel =
-		variant === "date-time"
-			? "Specific Date/Time"
-			: variant === "date-only"
-				? "Specific Date"
-				: "Specific Time";
-
 	return (
 		<div className="rounded-sm bg-gray-800 p-4">
-			<p className="mb-4">{title}</p>
-			<Select
-				defaultValue={type}
-				options={["anytime", "specific"]}
-				formatOptionLabel={(d) =>
-					d === "anytime" ? "Anytime" : specificLabel
-				}
-				onChange={(ev) => setType(ev.target.value as DateType)}
-			/>
-			{type === "specific" && variant !== "time-only" && (
-				<div className="" key="dateOptions">
-					<p className="my-2">Every:</p>
+			<p className="mb-2">Date Settings</p>
+			<div className="grid grid-cols-2 rounded-lg border-2">
+				<label className="border-r-2 px-4 py-2 text-center has-checked:bg-white/30">
+					Any Day
+					<input
+						type="radio"
+						name="dateType"
+						className="hidden"
+						defaultChecked={true}
+						onChange={(e) =>
+							e.target.checked && setDateType("anytime")
+						}
+					/>
+				</label>
+				<label className="px-4 py-2 text-center has-checked:bg-white/30">
+					Specific Days
+					<input
+						type="radio"
+						name="dateType"
+						className="hidden"
+						onChange={(e) =>
+							e.target.checked && setDateType("specific")
+						}
+					/>
+				</label>
+			</div>
+
+			{dateType === "specific" && (
+				<div className="mt-2" key="dateOptions">
 					<fieldset className="flex w-full flex-col gap-2">
-						<div className="flex w-full gap-2">
+						<div className="flex w-full items-center gap-2">
+							Every:
 							<input
 								type="number"
 								defaultValue={everyDateFreq}
@@ -81,20 +84,18 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 										Number(e.target.value) || 1,
 									)
 								}
-								className="w-0 grow border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
+								className="w-0 grow rounded-sm border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
 							/>
-							<select
+							<Select
+								options={["day", "week", "month", "year"]}
+								formatOptionLabel={(option) => option + "(s)"}
 								onChange={(e) =>
 									setEveryDate(e.target.value as EveryDate)
 								}
 								defaultValue={everyDate}
-								className="w-0 grow border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
-							>
-								<option value="day">day(s)</option>
-								<option value="week">week(s)</option>
-								<option value="month">month(s)</option>
-								<option value="year">year(s)</option>
-							</select>
+								divClassName="grow"
+								className="w-0 rounded-sm border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
+							/>
 						</div>
 						{everyDate === "month" && (
 							<>
@@ -119,20 +120,18 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 										htmlFor="monthObjectiveDay"
 									>
 										<p>on the</p>
-										<select className="grow border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black">
-											{Array.from({
-												length: 31,
-											}).map((_, i) => (
-												<option
-													key={i + 1}
-													value={i + 1}
-												>
-													{i + 1}
-													{getTh(i + 1)}
-												</option>
-											))}
-											<option value={33}>last day</option>
-										</select>
+										<Select
+											options={Array.from({
+												length: 32,
+											}).map((_, i) => i + 1)}
+											formatOptionLabel={(val) =>
+												val == 33
+													? "last day"
+													: `${val}${getTh(val)}`
+											}
+											divClassName="grow"
+											className="rounded-sm border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
+										/>
 									</label>
 								</div>
 								<div className="flex h-11 w-full items-center gap-2 pl-4">
@@ -145,48 +144,37 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 										className="flex grow items-center gap-2"
 										htmlFor="monthSubjectiveDay"
 									>
-										<select className="grow border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black">
-											<option value="first">First</option>
-											<option value="second">
-												Second
-											</option>
-											<option value="third">Third</option>
-											<option value="fourth">
-												Fourth
-											</option>
-											<option value="last">Last</option>
-										</select>
-										<select className="grow border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black">
-											<option value="monday">
-												Monday
-											</option>
-											<option value="tuesday">
-												Tuesday
-											</option>
-											<option value="wednesday">
-												Wednesday
-											</option>
-											<option value="thursday">
-												Thursday
-											</option>
-											<option value="friday">
-												Friday
-											</option>
-											<option value="saturday">
-												Saturday
-											</option>
-											<option value="sunday">
-												Sunday
-											</option>
-										</select>
+										<Select
+											divClassName="grow"
+											className="border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
+											options={[
+												"First",
+												"Second",
+												"Third",
+												"Fourth",
+											]}
+										/>
+										<Select
+											divClassName="grow"
+											className="border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
+											options={[
+												"Monday",
+												"Tuesday",
+												"Wednesday",
+												"Thursday",
+												"Friday",
+												"Saturday",
+												"Sunday",
+											]}
+										/>
 									</label>
 								</div>
 							</>
 						)}
 						{everyDate === "week" && (
-							<div className="flex h-11 w-full items-center gap-2 pl-4">
+							<div className="flex h-11 w-full items-center gap-2">
 								<label
-									className="flex grow items-center gap-2"
+									className="flex items-center gap-2"
 									htmlFor="dateWeekly"
 								>
 									On
@@ -209,8 +197,36 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 					</fieldset>
 				</div>
 			)}
-			{type === "specific" && variant !== "date-only" && (
-				<div className="" key="timeOptions">
+
+			<p className="mt-4 mb-2">Time Settings</p>
+			<div className="mt-2 grid grid-cols-2 rounded-lg border-2">
+				<label className="border-r-2 px-4 py-2 text-center has-checked:bg-white/30">
+					Any Time
+					<input
+						type="radio"
+						name="timeType"
+						className="hidden"
+						defaultChecked={true}
+						onChange={(e) =>
+							e.target.checked && setTimeType("anytime")
+						}
+					/>
+				</label>
+				<label className="px-4 py-2 text-center has-checked:bg-white/30">
+					Specific Times
+					<input
+						type="radio"
+						name="timeType"
+						className="hidden"
+						onChange={(e) =>
+							e.target.checked && setTimeType("specific")
+						}
+					/>
+				</label>
+			</div>
+
+			{timeType === "specific" && (
+				<div className="mt-2" key="timeOptions">
 					<p className="my-2">At Every</p>
 					<fieldset className="flex w-full flex-col gap-2">
 						<div className="flex h-11 w-full items-center gap-2 pl-4">
