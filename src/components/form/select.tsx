@@ -5,7 +5,7 @@ type SelectProps<T> = React.DetailedHTMLProps<
 	React.SelectHTMLAttributes<HTMLSelectElement>,
 	HTMLSelectElement
 > & {
-	options: T[];
+	options: readonly T[];
 	formatOptionLabel?: (option: T) => React.ReactNode;
 	divClassName?: string;
 };

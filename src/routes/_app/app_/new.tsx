@@ -5,7 +5,7 @@ import { FormEventHandler, Suspense, useState } from "react";
 import { FIELDS, type Field } from "@/components/fields";
 import { Modal } from "@/components/modal";
 import LeftArrow from "@/components/icons/left-arrow";
-import { DateSettings } from "@/components/fields/dates/types";
+import type { DateFieldSettings } from "@/components/fields/dates/types";
 import DateNewThingComponent from "@/components/fields/dates/newThing";
 import dateField from "@/components/fields/dates";
 
@@ -21,11 +21,10 @@ interface AddThingField<T> extends Field<T> {
 function RouteComponent() {
 	const [fields, setFields] = useState<AddThingField<unknown>[]>([]);
 	const [defaultDateField, setDefaultDateField] = useState<
-		AddThingField<DateSettings>
+		AddThingField<DateFieldSettings>
 	>({
 		...dateField,
 		name: "DefaultDate",
-		fieldSettings: { type: "anytime" },
 	});
 
 	const [showAddFieldModal, setShowModal] = useState(false);
