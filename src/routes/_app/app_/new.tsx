@@ -8,6 +8,7 @@ import LeftArrow from "@/components/icons/left-arrow";
 import type { DateFieldSettings } from "@/components/fields/dates/types";
 import DateNewThingComponent from "@/components/fields/dates/newThing";
 import dateField from "@/components/fields/dates";
+import { MdDragIndicator } from "react-icons/md";
 
 export const Route = createFileRoute("/_app/app_/new")({
 	component: RouteComponent,
@@ -36,6 +37,20 @@ function RouteComponent() {
 
 		const formValues = {
 			name: formData.get("thingName"),
+			fields: [
+				{
+					id: defaultDateField.id,
+					name: "Date Entered",
+					schema: defaultDateField.fieldSettingsToSchemaString(
+						defaultDateField.fieldSettings,
+					),
+				},
+				...fields.map((v) => ({
+					id: v.id,
+					name: v.name,
+					schema: v.fieldSettingsToSchemaString(v.fieldSettings),
+				})),
+			],
 		};
 
 		console.log("Submitting form game us", formValues);
@@ -75,9 +90,15 @@ function RouteComponent() {
 					/>
 				</div>
 
-				<div>
-					<div className="mb-2 flex w-full items-baseline justify-between">
-						<p className="">Created Date (required)</p>
+				<div className="rounded-sm bg-gray-800 p-4">
+					<div className="mb-4 flex items-center justify-between gap-4">
+						<input
+							type="text"
+							placeholder="Field Title"
+							value="Created Date (required)"
+							disabled
+							className="grow border-b-2 py-2 outline-none"
+						/>
 					</div>
 					<Suspense fallback={"Loading"}>
 						<DateNewThingComponent
@@ -95,8 +116,20 @@ function RouteComponent() {
 
 			<div className="mt-4 flex w-full flex-col gap-4">
 				{fields.map((field, i) => (
-					<div key={i}>
-						Field {i} is a {field.friendlyName()} field.
+					<div key={i} className="rounded-sm bg-gray-800 p-4">
+						<div className="mb-4 flex items-center justify-between gap-4">
+							<input
+								type="text"
+								placeholder="Field Title"
+								defaultValue={field.name}
+								onChange={(e) => {
+									fields[i].name = e.target.value;
+									return [...fields];
+								}}
+								className="grow border-b-2 py-2 outline-none"
+							/>
+							<MdDragIndicator className="h-5 w-5" />
+						</div>
 						<Suspense fallback={"Loading"}>
 							<field.NewThingComponent
 								fieldSettings={field.fieldSettings}
@@ -139,7 +172,7 @@ function RouteComponent() {
 											{
 												...fieldType,
 												fieldSettings: {},
-												name: "",
+												name: `${fieldType.friendlyName()} ${fields.length}`,
 											},
 										]);
 										setShowModal(false);

@@ -145,7 +145,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 	]);
 
 	return (
-		<div className="rounded-sm bg-gray-800 p-4">
+		<div>
 			<p className="mb-2">Date Settings</p>
 			<div className="grid grid-cols-2 rounded-lg border-2">
 				<label className="border-r-2 px-4 py-2 text-center has-checked:bg-white/30">

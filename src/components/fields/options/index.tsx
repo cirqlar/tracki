@@ -34,7 +34,7 @@ const NewThingComponent: OptionsField["NewThingComponent"] = ({
 	}, [options, selectMultiple]);
 
 	return (
-		<div className="rounded-sm bg-gray-800 p-4">
+		<div>
 			<p className="mb-4">Options Settings</p>
 
 			<fieldset className="flex w-full flex-col gap-2">

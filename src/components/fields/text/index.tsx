@@ -28,7 +28,7 @@ const NewThingComponent: TextField["NewThingComponent"] = ({
 	}, [short]);
 
 	return (
-		<div className="rounded-sm bg-gray-800 p-4">
+		<div>
 			<p className="mb-4">Text Settings</p>
 
 			<label className="flex items-center gap-2">

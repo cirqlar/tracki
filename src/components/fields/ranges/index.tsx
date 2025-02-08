@@ -66,7 +66,7 @@ const NewThingComponent: RangeField["NewThingComponent"] = ({
 	}, [type, start, end, step, options, allowInbetween]);
 
 	return (
-		<div className="rounded-sm bg-gray-800 p-4">
+		<div>
 			<p className="mb-4">Range Settings</p>
 
 			<div className="mb-2 grid grid-cols-2 rounded-lg border-2">
