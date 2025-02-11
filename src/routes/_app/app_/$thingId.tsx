@@ -1,9 +1,29 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { getThing } from "@/components/db/thing";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/_app/app_/$thingId')({
-  component: RouteComponent,
-})
+export const Route = createFileRoute("/_app/app_/$thingId")({
+	component: RouteComponent,
+});
 
 function RouteComponent() {
-  return <div>Hello "/_app/app_/$thingId"!</div>
+	const { thingId } = Route.useParams();
+	const { data: thing } = useQuery({
+		queryKey: ["thing", thingId],
+		queryFn: () => getThing(Number(thingId)),
+	});
+
+	if (!thing) {
+		return (
+			<div>
+				<p>Loading</p>
+			</div>
+		);
+	}
+
+	return (
+		<div>
+			<h1>{thing.name}</h1>
+		</div>
+	);
 }

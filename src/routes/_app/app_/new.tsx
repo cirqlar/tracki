@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { FormEventHandler, Suspense, useState } from "react";
 // import { MdAdd } from "react-icons/md";
 
@@ -9,6 +9,7 @@ import type { DateFieldSettings } from "@/components/fields/dates/types";
 import DateNewThingComponent from "@/components/fields/dates/newThing";
 import dateField from "@/components/fields/dates";
 import { MdDragIndicator } from "react-icons/md";
+import { addThing } from "@/components/db/thing";
 
 export const Route = createFileRoute("/_app/app_/new")({
 	component: RouteComponent,
@@ -20,6 +21,8 @@ interface AddThingField<T> extends Field<T> {
 }
 
 function RouteComponent() {
+	const navigate = useNavigate();
+
 	const [fields, setFields] = useState<AddThingField<unknown>[]>([]);
 	const [defaultDateField, setDefaultDateField] = useState<
 		AddThingField<DateFieldSettings>
@@ -30,30 +33,34 @@ function RouteComponent() {
 
 	const [showAddFieldModal, setShowModal] = useState(false);
 
-	const submitForm: FormEventHandler<HTMLFormElement> = (event) => {
+	const submitForm: FormEventHandler<HTMLFormElement> = async (event) => {
 		event.preventDefault();
 
 		const formData = new FormData(event.currentTarget);
 
-		const formValues = {
-			name: formData.get("thingName"),
-			fields: [
-				{
-					id: defaultDateField.id,
-					name: "Date Entered",
-					schema: defaultDateField.fieldSettingsToSchemaString(
+		try {
+			const thingId = await addThing({
+				name: formData.get("thingName") as string,
+				default_date_schema:
+					defaultDateField.fieldSettingsToSchemaString(
 						defaultDateField.fieldSettings,
 					),
-				},
-				...fields.map((v) => ({
-					id: v.id,
-					name: v.name,
-					schema: v.fieldSettingsToSchemaString(v.fieldSettings),
-				})),
-			],
-		};
+				schema: JSON.stringify(
+					fields.map((v) => ({
+						id: v.id,
+						name: v.name,
+						schema: v.fieldSettingsToSchemaString(v.fieldSettings),
+					})),
+				),
+			});
 
-		console.log("Submitting form game us", formValues);
+			navigate({
+				to: "/app/$thingId",
+				params: { thingId: thingId.toString() },
+			});
+		} catch (e) {
+			console.log("Errror: ", e);
+		}
 	};
 
 	return (

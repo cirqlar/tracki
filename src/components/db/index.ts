@@ -3,6 +3,7 @@ import Dexie, { type EntityTable } from "dexie";
 interface Thing {
 	id: number;
 	name: string;
+	default_date_schema: string;
 	schema: string;
 	created_at: number;
 	last_modified_at: number;
@@ -11,6 +12,7 @@ interface Thing {
 interface Entry {
 	id: number;
 	thing_id: number;
+	created_for: number;
 	created_at: number;
 	last_modified_at: number;
 	entry_infromation: string;
@@ -26,9 +28,21 @@ const db = new Dexie("TrackiDatabase") as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-	thing: "++id, &name, created_at, last_modified_at", // primary key "id" (for the runtime!)
+	things: "++id, &name, created_at, last_modified_at", // primary key "id" (for the runtime!)
 	entries: "++id, thing_id, created_at, last_modified_at", // primary key "id" (for the runtime!)
 });
+db.version(2)
+	.stores({
+		entries: "++id, thing_id, created_for, created_at, last_modified_at", // add created for
+	})
+	.upgrade((tx) => {
+		return tx
+			.table("entries")
+			.toCollection()
+			.modify((entry: Entry) => {
+				entry.created_for = entry.created_at;
+			});
+	});
 
 export type { Thing, Entry };
 export { db };

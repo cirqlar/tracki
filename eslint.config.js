@@ -3,6 +3,7 @@ import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -17,5 +18,6 @@ export default [
 		},
 		rules: pluginReactHooks.configs.recommended.rules,
 	},
+	...pluginQuery.configs["flat/recommended"],
 	{ ignores: ["src-tauri", "dist/"] },
 ];
