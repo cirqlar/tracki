@@ -10,6 +10,7 @@ import DateNewThingComponent from "@/components/fields/dates/newThing";
 import dateField from "@/components/fields/dates";
 import { MdDragIndicator } from "react-icons/md";
 import { addThing } from "@/components/db/thing";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_app/app_/new")({
 	component: RouteComponent,
@@ -22,6 +23,7 @@ interface AddThingField<T> extends Field<T> {
 
 function RouteComponent() {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const [fields, setFields] = useState<AddThingField<unknown>[]>([]);
 	const [defaultDateField, setDefaultDateField] = useState<
@@ -53,6 +55,8 @@ function RouteComponent() {
 					})),
 				),
 			});
+
+			queryClient.invalidateQueries({ queryKey: ["things"] });
 
 			navigate({
 				to: "/app/$thingId",
