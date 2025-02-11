@@ -5,7 +5,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 5 * 60 * 1000,
+		},
+	},
+});
 
 export const Route = createRootRoute({
 	component: () => (
@@ -13,7 +19,7 @@ export const Route = createRootRoute({
 			<ModalProvider>
 				<Outlet />
 				{/* <TanStackRouterDevtools /> */}
-				{/* <ReactQueryDevtools initialIsOpen={true} /> */}
+				{/* <ReactQueryDevtools /> */}
 			</ModalProvider>
 		</QueryClientProvider>
 	),
