@@ -20,6 +20,7 @@ import { Route as AppAppImport } from './routes/_app/app'
 import { Route as indexIndexIndexImport } from './routes/(index)/_index.index'
 import { Route as AppAppNewImport } from './routes/_app/app_/new'
 import { Route as AppAppThingIdImport } from './routes/_app/app_/$thingId'
+import { Route as AppAppThingIdNewImport } from './routes/_app/app_/$thingId_.new'
 import { Route as indexIndexAppBeginImport } from './routes/(index)/_index.app.begin'
 
 // Create Virtual Routes
@@ -70,6 +71,12 @@ const AppAppNewRoute = AppAppNewImport.update({
 const AppAppThingIdRoute = AppAppThingIdImport.update({
   id: '/app_/$thingId',
   path: '/app/$thingId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
+const AppAppThingIdNewRoute = AppAppThingIdNewImport.update({
+  id: '/app_/$thingId_/new',
+  path: '/app/$thingId/new',
   getParentRoute: () => AppRouteRoute,
 } as any)
 
@@ -146,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof indexIndexAppBeginImport
       parentRoute: typeof indexIndexImport
     }
+    '/_app/app_/$thingId_/new': {
+      id: '/_app/app_/$thingId_/new'
+      path: '/app/$thingId/new'
+      fullPath: '/app/$thingId/new'
+      preLoaderRoute: typeof AppAppThingIdNewImport
+      parentRoute: typeof AppRouteImport
+    }
   }
 }
 
@@ -155,12 +169,14 @@ interface AppRouteRouteChildren {
   AppAppRoute: typeof AppAppRoute
   AppAppThingIdRoute: typeof AppAppThingIdRoute
   AppAppNewRoute: typeof AppAppNewRoute
+  AppAppThingIdNewRoute: typeof AppAppThingIdNewRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAppRoute: AppAppRoute,
   AppAppThingIdRoute: AppAppThingIdRoute,
   AppAppNewRoute: AppAppNewRoute,
+  AppAppThingIdNewRoute: AppAppThingIdNewRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
@@ -199,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/app/$thingId': typeof AppAppThingIdRoute
   '/app/new': typeof AppAppNewRoute
   '/app/begin': typeof indexIndexAppBeginRoute
+  '/app/$thingId/new': typeof AppAppThingIdNewRoute
 }
 
 export interface FileRoutesByTo {
@@ -209,6 +226,7 @@ export interface FileRoutesByTo {
   '/app/new': typeof AppAppNewRoute
   '/': typeof indexIndexIndexRoute
   '/app/begin': typeof indexIndexAppBeginRoute
+  '/app/$thingId/new': typeof AppAppThingIdNewRoute
 }
 
 export interface FileRoutesById {
@@ -222,6 +240,7 @@ export interface FileRoutesById {
   '/_app/app_/new': typeof AppAppNewRoute
   '/(index)/_index/': typeof indexIndexIndexRoute
   '/(index)/_index/app/begin': typeof indexIndexAppBeginRoute
+  '/_app/app_/$thingId_/new': typeof AppAppThingIdNewRoute
 }
 
 export interface FileRouteTypes {
@@ -234,6 +253,7 @@ export interface FileRouteTypes {
     | '/app/$thingId'
     | '/app/new'
     | '/app/begin'
+    | '/app/$thingId/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -243,6 +263,7 @@ export interface FileRouteTypes {
     | '/app/new'
     | '/'
     | '/app/begin'
+    | '/app/$thingId/new'
   id:
     | '__root__'
     | '/_app'
@@ -254,6 +275,7 @@ export interface FileRouteTypes {
     | '/_app/app_/new'
     | '/(index)/_index/'
     | '/(index)/_index/app/begin'
+    | '/_app/app_/$thingId_/new'
   fileRoutesById: FileRoutesById
 }
 
@@ -289,7 +311,8 @@ export const routeTree = rootRoute
       "children": [
         "/_app/app",
         "/_app/app_/$thingId",
-        "/_app/app_/new"
+        "/_app/app_/new",
+        "/_app/app_/$thingId_/new"
       ]
     },
     "/(index)": {
@@ -328,6 +351,10 @@ export const routeTree = rootRoute
     "/(index)/_index/app/begin": {
       "filePath": "(index)/_index.app.begin.tsx",
       "parent": "/(index)/_index"
+    },
+    "/_app/app_/$thingId_/new": {
+      "filePath": "_app/app_/$thingId_.new.tsx",
+      "parent": "/_app"
     }
   }
 }

@@ -4,6 +4,7 @@ import {
 	useState,
 	experimental_useEffectEvent as useEffectEvent,
 	useRef,
+	useMemo,
 } from "react";
 import { MdLinearScale } from "react-icons/md";
 
@@ -181,6 +182,57 @@ const AddMenuIcon: RangeField["AddMenuIcon"] = () => {
 	return <MdLinearScale className="h-full w-full" />;
 };
 
+const AddEntryComponent: RangeField["AddEntryComponent"] = ({ schema }) => {
+	const unLeaded = useMemo(
+		() => JSON.parse(schema) as RangeSettings,
+		[schema],
+	);
+
+	if (unLeaded.type === "number") {
+		return (
+			<div className="flex w-full gap-2">
+				<p>{unLeaded.start}</p>
+				<input
+					className="grow"
+					type="range"
+					min={unLeaded.start}
+					max={unLeaded.end}
+					step={unLeaded.step || "any"}
+				/>
+				<p>{unLeaded.end}</p>
+			</div>
+		);
+	} else {
+		return (
+			<div className="relative flex h-15 w-full flex-col gap-2">
+				<input
+					className="h-5 grow"
+					type="range"
+					min={1}
+					max={unLeaded.options.length}
+					step={unLeaded.allowInbetween ? "any" : 1}
+				/>
+				<div className="relative mx-1.75 h-8">
+					{unLeaded.options.map((opt, i) => (
+						<div
+							key={i}
+							className="group absolute top-0 bottom-0 left-(--left) flex flex-col not-first-of-type:not-last-of-type:-translate-x-1/2 last-of-type:right-0"
+							style={{
+								"--left": `${i === unLeaded.options.length - 1 ? "" : i * (100 / (unLeaded.options.length - 1))}%`,
+							}}
+						>
+							<div className="mx-auto w-0 grow border border-current group-first-of-type:ml-0 group-last-of-type:mr-0"></div>
+							<p className="mt-2 grow-0 text-center text-xs group-first-of-type:text-left group-last-of-type:text-right">
+								{opt}
+							</p>
+						</div>
+					))}
+				</div>
+			</div>
+		);
+	}
+};
+
 const rangeField: RangeField = {
 	id: "fields/range/0001",
 	friendlyName: () => "Range",
@@ -188,7 +240,7 @@ const rangeField: RangeField = {
 		JSON.stringify(rangeSettings),
 	NewThingComponent,
 	AddMenuIcon,
-	AddEntryComponent: () => null,
+	AddEntryComponent,
 	DisplayEntryComponent: () => null,
 };
 

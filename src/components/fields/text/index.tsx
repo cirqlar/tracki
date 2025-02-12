@@ -3,6 +3,7 @@ import {
 	useEffect,
 	useState,
 	experimental_useEffectEvent as useEffectEvent,
+	useMemo,
 } from "react";
 import { MdNotes } from "react-icons/md";
 
@@ -47,13 +48,37 @@ const AddMenuIcon: TextField["AddMenuIcon"] = () => {
 	return <MdNotes className="h-full w-full" />;
 };
 
+const AddEntryComponent: TextField["AddEntryComponent"] = ({ schema }) => {
+	const unLeaded = useMemo(
+		() => JSON.parse(schema) as TextSettings,
+		[schema],
+	);
+
+	if (unLeaded.short) {
+		return (
+			<input
+				type="text"
+				placeholder="Write in me"
+				className="rounded-sm border-2 border-gray-800 bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-gray-800"
+			/>
+		);
+	} else {
+		return (
+			<textarea
+				className="min-h-24 rounded-sm border-2 border-gray-800 bg-white px-4 py-4 outline-none focus-visible:border-current dark:bg-gray-800"
+				placeholder="Write in me"
+			/>
+		);
+	}
+};
+
 const textField: TextField = {
 	id: "fields/text/0001",
 	friendlyName: () => "Text",
 	fieldSettingsToSchemaString: (textSettings) => JSON.stringify(textSettings),
 	NewThingComponent,
 	AddMenuIcon,
-	AddEntryComponent: () => null,
+	AddEntryComponent,
 	DisplayEntryComponent: () => null,
 };
 
