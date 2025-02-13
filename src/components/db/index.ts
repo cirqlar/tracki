@@ -15,7 +15,7 @@ interface Entry {
 	created_for: number;
 	created_at: number;
 	last_modified_at: number;
-	entry_infromation: string;
+	entry_data: string;
 }
 
 const db = new Dexie("TrackiDatabase") as Dexie & {

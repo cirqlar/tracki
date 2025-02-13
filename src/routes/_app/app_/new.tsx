@@ -52,7 +52,7 @@ function RouteComponent() {
 		}
 
 		for (let i = 0; i < fields.length; i++) {
-			anyErrors ||= fields[i].valid;
+			anyErrors ||= !fields[i].valid;
 		}
 
 		return !anyErrors;

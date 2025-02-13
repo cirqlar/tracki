@@ -1,9 +1,3 @@
-import { getThing } from "@/components/db/thing";
-import { FIELDS } from "@/components/fields";
-import dateField from "@/components/fields/dates";
-import { DateFieldSettings } from "@/components/fields/dates/types";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
 import {
 	experimental_useEffectEvent as useEffectEvent,
 	FormEventHandler,
@@ -12,12 +6,22 @@ import {
 	useState,
 	Suspense,
 } from "react";
+import { getUnixTime } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+
+import { addEntry } from "@/components/db/entry";
+import { getThing } from "@/components/db/thing";
+import { FIELDS } from "@/components/fields";
+import dateField from "@/components/fields/dates";
+import { DateFieldSettings } from "@/components/fields/dates/types";
 
 export const Route = createFileRoute("/_app/app_/$thingId_/new")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	const navigate = useNavigate();
 	const { thingId } = Route.useParams();
 	const { data: thing } = useQuery({
 		queryKey: ["thing", thingId],
@@ -77,7 +81,7 @@ function RouteComponent() {
 	const validate = () => {
 		let anyErrors = defaultDateValid;
 		for (let i = 0; i < fieldsInfo.length; i++) {
-			anyErrors ||= fieldsInfo[i].valid;
+			anyErrors ||= !fieldsInfo[i].valid;
 		}
 
 		return !anyErrors;
@@ -90,7 +94,21 @@ function RouteComponent() {
 		setDoingStuff(true);
 
 		if (validate()) {
-			// do stuff
+			/* const entryId = */ await addEntry(
+				{
+					thing_id: Number(thingId),
+
+					entry_data: JSON.stringify(
+						fieldsInfo.map(({ data }) => data),
+					),
+				},
+				getUnixTime(Date.now()),
+			);
+
+			navigate({
+				to: "/app/$thingId",
+				params: { thingId: thingId.toString() },
+			});
 		} else {
 			setShowErrors(true);
 		}
