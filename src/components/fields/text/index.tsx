@@ -6,9 +6,7 @@ import {
 } from "react";
 import { MdNotes } from "react-icons/md";
 
-export interface TextSettings {
-	short: boolean;
-}
+export type TextSettings = boolean;
 
 export type TextData = string;
 
@@ -18,16 +16,14 @@ const NewThingComponent: TextField["NewThingComponent"] = ({
 	defaultFieldSettings: dfs,
 	updateFieldSettings,
 }) => {
-	const [short, setShort] = useState(dfs.short);
+	const [short, setShort] = useState(dfs);
 
 	const updateData = useEffectEvent((fieldSettings: TextSettings) => {
 		updateFieldSettings(fieldSettings);
 	});
 
 	useEffect(() => {
-		updateData({
-			short,
-		});
+		updateData(short);
 	}, [short]);
 
 	return (
@@ -54,7 +50,7 @@ const AddEntryComponent: TextField["AddEntryComponent"] = ({
 	fieldSettings,
 	fieldLabel,
 }) => {
-	if (fieldSettings.short) {
+	if (fieldSettings) {
 		return (
 			<input
 				id={fieldLabel}
@@ -77,7 +73,7 @@ const AddEntryComponent: TextField["AddEntryComponent"] = ({
 const textField: TextField = {
 	id: "fields/text/0001",
 	friendlyName: () => "Text",
-	getDefaultFieldSettings: () => ({ short: true }),
+	getDefaultFieldSettings: () => true,
 	getDefaultEntry: () => "",
 	NewThingComponent,
 	AddMenuIcon,
