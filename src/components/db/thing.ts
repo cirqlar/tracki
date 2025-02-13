@@ -12,6 +12,10 @@ export function addThing(
 	});
 }
 
+export async function checkNameExists(name: string) {
+	return (await db.things.where({ name }).count()) > 0;
+}
+
 export function getThings() {
 	console.log("Getting first ten things");
 	return db.things.orderBy("created_at").reverse().limit(10).toArray();

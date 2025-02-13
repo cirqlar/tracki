@@ -14,9 +14,10 @@ export interface TextSettings {
 type TextField = Field<TextSettings>;
 
 const NewThingComponent: TextField["NewThingComponent"] = ({
+	defaultFieldSettings: dfs,
 	updateFieldData,
 }) => {
-	const [short, setShort] = useState(true);
+	const [short, setShort] = useState(dfs.short);
 
 	const updateData = useEffectEvent((fieldSettings: TextSettings) => {
 		updateFieldData(fieldSettings);
@@ -48,7 +49,10 @@ const AddMenuIcon: TextField["AddMenuIcon"] = () => {
 	return <MdNotes className="h-full w-full" />;
 };
 
-const AddEntryComponent: TextField["AddEntryComponent"] = ({ schema }) => {
+const AddEntryComponent: TextField["AddEntryComponent"] = ({
+	schema,
+	fieldLabel,
+}) => {
 	const unLeaded = useMemo(
 		() => JSON.parse(schema) as TextSettings,
 		[schema],
@@ -57,6 +61,7 @@ const AddEntryComponent: TextField["AddEntryComponent"] = ({ schema }) => {
 	if (unLeaded.short) {
 		return (
 			<input
+				id={fieldLabel}
 				type="text"
 				placeholder="Write in me"
 				className="rounded-sm border-2 border-gray-800 bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-gray-800"
@@ -65,6 +70,7 @@ const AddEntryComponent: TextField["AddEntryComponent"] = ({ schema }) => {
 	} else {
 		return (
 			<textarea
+				id={fieldLabel}
 				className="min-h-24 rounded-sm border-2 border-gray-800 bg-white px-4 py-4 outline-none focus-visible:border-current dark:bg-gray-800"
 				placeholder="Write in me"
 			/>
@@ -76,6 +82,7 @@ const textField: TextField = {
 	id: "fields/text/0001",
 	friendlyName: () => "Text",
 	fieldSettingsToSchemaString: (textSettings) => JSON.stringify(textSettings),
+	getDefaultFieldSettings: () => ({ short: true }),
 	NewThingComponent,
 	AddMenuIcon,
 	AddEntryComponent,

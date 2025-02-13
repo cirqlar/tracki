@@ -34,23 +34,52 @@ const getTh = (i: number) => {
 };
 
 const NewThingComponent: DateField["NewThingComponent"] = ({
+	defaultFieldSettings: dfs,
 	updateFieldData,
+	disambigKey,
 }) => {
-	const [useDateSettings, setUseDate] = useState(false);
-	const [dateType, setDateType] = useState<DateType>("day");
-	const [dateCount, setDateCount] = useState(1);
-	const [weekDays] = useState<WeekSettings["days"]>([]);
-	const [monthVariant, setMonthVariant] =
-		useState<MonthSettings["variant"]>("whenever");
-	const [dayOfMonth, setDayOfMonth] = useState(1);
-	const [monthRelative, setMonthRelative] = useState<RelativeDay>("First");
-	const [monthRelativeDay, setRelativeDay] = useState<DayOfTheWeek>("Monday");
+	const [useDateSettings, setUseDate] = useState(dfs.date.type !== "anytime");
+	const [dateType, setDateType] = useState<DateType>(
+		dfs.date.type === "anytime" ? "day" : dfs.date.type,
+	);
+	const [dateCount, setDateCount] = useState(
+		dfs.date.type !== "anytime" ? dfs.date.count : 1,
+	);
+	const [weekDays] = useState<WeekSettings["days"]>(
+		dfs.date.type === "week" ? dfs.date.days : [],
+	);
+	const [monthVariant, setMonthVariant] = useState<MonthSettings["variant"]>(
+		dfs.date.type === "month" ? dfs.date.variant : "whenever",
+	);
+	const [dayOfMonth, setDayOfMonth] = useState(
+		dfs.date.type === "month" && dfs.date.variant === "day"
+			? dfs.date.day
+			: 1,
+	);
+	const [monthRelative, setMonthRelative] = useState<RelativeDay>(
+		dfs.date.type === "month" && dfs.date.variant === "relative"
+			? dfs.date.when
+			: "First",
+	);
+	const [monthRelativeDay, setRelativeDay] = useState<DayOfTheWeek>(
+		dfs.date.type === "month" && dfs.date.variant === "relative"
+			? dfs.date.day_of_week
+			: "Monday",
+	);
 
-	const [useTimeSettings, setUseTime] = useState(false);
-	const [timeType, setTimeType] = useState<TimeType>("hours");
-	const [timeCount, setTimeCount] = useState(1);
-	const [timeFrom, setTimeFrom] = useState("");
-	const [times, setTimes] = useState<string[]>([]);
+	const [useTimeSettings, setUseTime] = useState(dfs.time.type !== "anytime");
+	const [timeType, setTimeType] = useState<TimeType>(
+		dfs.time.type === "anytime" ? "hours" : dfs.time.type,
+	);
+	const [timeCount, setTimeCount] = useState(
+		dfs.time.type === "hours" ? dfs.time.count : 1,
+	);
+	const [timeFrom, setTimeFrom] = useState(
+		dfs.time.type === "hours" ? dfs.time.from : "",
+	);
+	const [times, setTimes] = useState<string[]>(
+		dfs.time.type === "times" ? dfs.time.times : [],
+	);
 
 	const updateData = useEffectEvent((fieldSettings: DateFieldSettings) => {
 		updateFieldData(fieldSettings);
@@ -152,7 +181,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 					Any Day
 					<input
 						type="radio"
-						name="dateType"
+						name={`${disambigKey}-dateType`}
 						className="hidden"
 						defaultChecked={true}
 						onChange={(e) => e.target.checked && setUseDate(false)}
@@ -162,7 +191,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 					Specific Days
 					<input
 						type="radio"
-						name="dateType"
+						name={`${disambigKey}-dateType`}
 						className="hidden"
 						onChange={(e) => e.target.checked && setUseDate(true)}
 					/>
@@ -205,8 +234,8 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 								<div className="flex h-11 w-full items-center gap-2 pl-4">
 									<input
 										type="radio"
-										name="monthsRadios"
-										id="monthWhenever"
+										name={`${disambigKey}-monthsRadios`}
+										id={`${disambigKey}-monthWhenever`}
 										defaultChecked={
 											monthVariant === "whenever"
 										}
@@ -215,15 +244,18 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 											setMonthVariant("whenever")
 										}
 									/>
-									<label className="" htmlFor="monthWhenever">
+									<label
+										className=""
+										htmlFor={`${disambigKey}-monthWhenever`}
+									>
 										Whenever
 									</label>
 								</div>
 								<div className="flex h-11 w-full items-center gap-2 pl-4">
 									<input
 										type="radio"
-										name="monthsRadios"
-										id="monthObjectiveDay"
+										name={`${disambigKey}-monthsRadios`}
+										id={`${disambigKey}-monthObjectiveDay`}
 										defaultChecked={monthVariant === "day"}
 										onChange={(e) =>
 											e.target.checked &&
@@ -232,7 +264,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 									/>
 									<label
 										className="flex grow items-center gap-2"
-										htmlFor="monthObjectiveDay"
+										htmlFor={`${disambigKey}-monthObjectiveDay`}
 									>
 										<p>on the</p>
 										<Select
@@ -258,8 +290,8 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 								<div className="flex h-11 w-full items-center gap-2 pl-4">
 									<input
 										type="radio"
-										name="monthsRadios"
-										id="monthSubjectiveDay"
+										name={`${disambigKey}-monthsRadios`}
+										id={`${disambigKey}-monthSubjectiveDay`}
 										defaultChecked={
 											monthVariant === "relative"
 										}
@@ -270,7 +302,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 									/>
 									<label
 										className="flex grow items-center gap-2"
-										htmlFor="monthSubjectiveDay"
+										htmlFor={`${disambigKey}-monthSubjectiveDay`}
 									>
 										<Select
 											divClassName="grow"
@@ -304,12 +336,12 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 							<div className="flex h-11 w-full items-center gap-2">
 								<label
 									className="flex items-center gap-2"
-									htmlFor="dateWeekly"
+									htmlFor={`${disambigKey}-dateWeekly`}
 								>
 									On
 								</label>
 								<select
-									id="dateWeekly"
+									id={`${disambigKey}-dateWeekly`}
 									multiple
 									className="max-h-full grow border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
 								>
@@ -333,7 +365,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 					Any Time
 					<input
 						type="radio"
-						name="timeType"
+						name={`${disambigKey}-timeType`}
 						className="hidden"
 						defaultChecked={true}
 						onChange={(e) => e.target.checked && setUseTime(false)}
@@ -343,7 +375,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 					Specific Times
 					<input
 						type="radio"
-						name="timeType"
+						name={`${disambigKey}-timeType`}
 						className="hidden"
 						onChange={(e) => e.target.checked && setUseTime(true)}
 					/>
@@ -357,8 +389,8 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 						<div className="flex h-11 w-full items-center gap-2 pl-4">
 							<input
 								type="radio"
-								name="timeRadios"
-								id="timeHour"
+								name={`${disambigKey}-timeRadios`}
+								id={`${disambigKey}-timeHour`}
 								defaultChecked={timeType === "hours"}
 								onChange={(e) =>
 									e.target.checked && setTimeType("hours")
@@ -366,7 +398,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 							/>
 							<label
 								className="flex grow items-center gap-2"
-								htmlFor="timeHour"
+								htmlFor={`${disambigKey}-timeHour`}
 							>
 								<input
 									type="number"
@@ -392,8 +424,8 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 						<div className="flex h-11 w-full items-center gap-2 pl-4">
 							<input
 								type="radio"
-								name="timeRadios"
-								id="timeArbitrary"
+								name={`${disambigKey}-timeRadios`}
+								id={`${disambigKey}-timeArbitrary`}
 								defaultChecked={timeType === "times"}
 								onChange={(e) =>
 									e.target.checked && setTimeType("times")
@@ -401,7 +433,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 							/>
 							<label
 								className="flex grow items-center gap-2"
-								htmlFor="timeHour"
+								htmlFor={`${disambigKey}-timeArbitrary`}
 							>
 								<input
 									type="text"

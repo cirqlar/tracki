@@ -4,12 +4,21 @@ import rangeField from "./ranges";
 import textField from "./text";
 
 interface FieldNewThingProps<T> {
-	fieldSettings?: T;
-	updateFieldData: (fieldSettings?: T) => unknown;
+	defaultFieldSettings: T;
+	updateFieldData: (fieldSettings: T) => unknown;
+	updateValidity: (valid: boolean) => unknown;
+	showErrors: boolean;
+	disableInteraction: boolean;
+	disambigKey: number | string;
 }
 
 interface FieldAddEntryProps {
 	schema: string;
+	updateValidity: (valid: boolean) => unknown;
+	showErrors: boolean;
+	disableInteraction: boolean;
+	disambigKey: number | string;
+	fieldLabel: string;
 }
 
 interface FieldDisplayEntryProps {
@@ -20,6 +29,7 @@ interface FieldDisplayEntryProps {
 export interface Field<T> {
 	id: string;
 	friendlyName: () => string;
+	getDefaultFieldSettings: () => T;
 	fieldSettingsToSchemaString: (fieldSettings?: T) => string;
 	NewThingComponent: (props: FieldNewThingProps<T>) => React.ReactNode;
 	AddMenuIcon: (props: unknown) => React.ReactNode;

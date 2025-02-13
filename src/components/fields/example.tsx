@@ -13,6 +13,10 @@ const fieldSettingsToSchemaString: NewField["fieldSettingsToSchemaString"] = (
 	return JSON.stringify(fieldSettings);
 };
 
+const getDefaultFieldSettings: NewField["getDefaultFieldSettings"] = () => ({
+	red: true,
+});
+
 const NewThingComponent: NewField["NewThingComponent"] = (_props) => {
 	return <div>New Field New Thing</div>;
 };
@@ -33,6 +37,7 @@ const newField: NewField = {
 	id: "newFieldId",
 	friendlyName: () => "New Field Friendly Name",
 	fieldSettingsToSchemaString,
+	getDefaultFieldSettings,
 	NewThingComponent,
 	AddMenuIcon,
 	AddEntryComponent,

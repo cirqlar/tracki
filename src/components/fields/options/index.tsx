@@ -15,10 +15,15 @@ export interface OptionsSettings {
 type OptionsField = Field<OptionsSettings>;
 
 const NewThingComponent: OptionsField["NewThingComponent"] = ({
+	defaultFieldSettings,
 	updateFieldData,
 }) => {
-	const [options, setOptions] = useState<string[]>([]);
-	const [selectMultiple, setSelectMultiple] = useState(false);
+	const [options, setOptions] = useState<string[]>(
+		defaultFieldSettings.options,
+	);
+	const [selectMultiple, setSelectMultiple] = useState(
+		defaultFieldSettings.selectMultiple,
+	);
 
 	const optionInputRef = useRef<HTMLInputElement>(null);
 
@@ -92,6 +97,7 @@ const optionsField: OptionsField = {
 	friendlyName: () => "Options",
 	fieldSettingsToSchemaString: (optionsSettings) =>
 		JSON.stringify(optionsSettings),
+	getDefaultFieldSettings: () => ({ options: [], selectMultiple: false }),
 	NewThingComponent,
 	AddMenuIcon,
 	AddEntryComponent: () => null,

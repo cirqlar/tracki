@@ -30,20 +30,25 @@ export interface RangeSettingss {
 type RangeField = Field<RangeSettings>;
 
 const NewThingComponent: RangeField["NewThingComponent"] = ({
+	defaultFieldSettings: dfs,
 	updateFieldData,
 }) => {
 	const optionInputRef = useRef<HTMLInputElement>(null);
 
-	const [type, setType] = useState<RangeSettings["type"]>("number");
+	const [type, setType] = useState<RangeSettings["type"]>(dfs.type);
 
 	// Number State
-	const [start, setStart] = useState(0);
-	const [end, setEnd] = useState(0);
-	const [step, setStep] = useState(0);
+	const [start, setStart] = useState(dfs.type === "number" ? dfs.start : 0);
+	const [end, setEnd] = useState(dfs.type === "number" ? dfs.end : 0);
+	const [step, setStep] = useState(dfs.type === "number" ? dfs.step : 0);
 
 	// Text state
-	const [options, setOptions] = useState<string[]>([]);
-	const [allowInbetween, setAllow] = useState(false);
+	const [options, setOptions] = useState<string[]>(
+		dfs.type === "text" ? dfs.options : [],
+	);
+	const [allowInbetween, setAllow] = useState(
+		dfs.type === "text" ? dfs.allowInbetween : false,
+	);
 
 	const updateData = useEffectEvent((fieldSettings: RangeSettings) => {
 		updateFieldData(fieldSettings);
@@ -182,7 +187,10 @@ const AddMenuIcon: RangeField["AddMenuIcon"] = () => {
 	return <MdLinearScale className="h-full w-full" />;
 };
 
-const AddEntryComponent: RangeField["AddEntryComponent"] = ({ schema }) => {
+const AddEntryComponent: RangeField["AddEntryComponent"] = ({
+	schema,
+	fieldLabel,
+}) => {
 	const unLeaded = useMemo(
 		() => JSON.parse(schema) as RangeSettings,
 		[schema],
@@ -193,6 +201,7 @@ const AddEntryComponent: RangeField["AddEntryComponent"] = ({ schema }) => {
 			<div className="flex w-full gap-2">
 				<p>{unLeaded.start}</p>
 				<input
+					id={fieldLabel}
 					className="grow"
 					type="range"
 					min={unLeaded.start}
@@ -206,6 +215,7 @@ const AddEntryComponent: RangeField["AddEntryComponent"] = ({ schema }) => {
 		return (
 			<div className="relative flex h-15 w-full flex-col gap-2">
 				<input
+					id={fieldLabel}
 					className="h-5 grow"
 					type="range"
 					min={1}
@@ -238,6 +248,12 @@ const rangeField: RangeField = {
 	friendlyName: () => "Range",
 	fieldSettingsToSchemaString: (rangeSettings) =>
 		JSON.stringify(rangeSettings),
+	getDefaultFieldSettings: () => ({
+		type: "number",
+		start: 1,
+		end: 5,
+		step: 1,
+	}),
 	NewThingComponent,
 	AddMenuIcon,
 	AddEntryComponent,
