@@ -1,6 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { FormEventHandler, Suspense, useState } from "react";
-// import { MdAdd } from "react-icons/md";
 
 import { FIELDS } from "@/components/fields";
 import { Modal } from "@/components/modal";
@@ -69,16 +68,14 @@ function RouteComponent() {
 			try {
 				const thingId = await addThing({
 					name: name,
-					default_date_schema: dateField.fieldSettingsToSchemaString(
+					default_date_schema: JSON.stringify(
 						defaultDateField.fieldSettings,
 					),
 					schema: JSON.stringify(
 						fields.map((v) => ({
 							id: v.id,
 							name: v.name,
-							schema: FIELDS[v.id].fieldSettingsToSchemaString(
-								v.fieldSettings,
-							),
+							fieldSettings: v.fieldSettings,
 						})),
 					),
 				});
@@ -158,7 +155,7 @@ function RouteComponent() {
 							defaultFieldSettings={
 								defaultDateField.fieldSettings
 							}
-							updateFieldData={(update) => {
+							updateFieldSettings={(update) => {
 								setDefaultDateField((prev) => ({
 									...prev,
 									fieldSettings: update,
@@ -202,7 +199,7 @@ function RouteComponent() {
 										defaultFieldSettings={
 											field.fieldSettings
 										}
-										updateFieldData={(newData) =>
+										updateFieldSettings={(newData) =>
 											setFields((fields) => {
 												fields[i].fieldSettings =
 													newData;

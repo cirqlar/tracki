@@ -12,11 +12,15 @@ export interface OptionsSettings {
 	selectMultiple: boolean;
 }
 
-type OptionsField = Field<OptionsSettings>;
+export interface OptionsData {
+	selected: string[];
+}
+
+type OptionsField = Field<OptionsSettings, OptionsData>;
 
 const NewThingComponent: OptionsField["NewThingComponent"] = ({
 	defaultFieldSettings,
-	updateFieldData,
+	updateFieldSettings,
 }) => {
 	const [options, setOptions] = useState<string[]>(
 		defaultFieldSettings.options,
@@ -28,7 +32,7 @@ const NewThingComponent: OptionsField["NewThingComponent"] = ({
 	const optionInputRef = useRef<HTMLInputElement>(null);
 
 	const updateData = useEffectEvent((fieldSettings: OptionsSettings) => {
-		updateFieldData(fieldSettings);
+		updateFieldSettings(fieldSettings);
 	});
 
 	useEffect(() => {
@@ -95,9 +99,8 @@ const AddMenuIcon: OptionsField["AddMenuIcon"] = () => {
 const optionsField: OptionsField = {
 	id: "fields/options/0001",
 	friendlyName: () => "Options",
-	fieldSettingsToSchemaString: (optionsSettings) =>
-		JSON.stringify(optionsSettings),
 	getDefaultFieldSettings: () => ({ options: [], selectMultiple: false }),
+	getDefaultEntry: () => ({ selected: [] }),
 	NewThingComponent,
 	AddMenuIcon,
 	AddEntryComponent: () => null,

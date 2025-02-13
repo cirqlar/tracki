@@ -53,7 +53,12 @@ export type DateFieldSettings = {
 	time: TimeSettings;
 };
 
+export type DateFieldData = {
+	date: string;
+	time: string;
+};
+
 export type DateType = DateSettings["type"];
 export type TimeType = TimeSettings["type"];
 
-export type DateField = Field<DateFieldSettings>;
+export type DateField = Field<DateFieldSettings, DateFieldData>;

@@ -5,15 +5,17 @@ import textField from "./text";
 
 interface FieldNewThingProps<T> {
 	defaultFieldSettings: T;
-	updateFieldData: (fieldSettings: T) => unknown;
+	updateFieldSettings: (fieldSettings: T) => unknown;
 	updateValidity: (valid: boolean) => unknown;
 	showErrors: boolean;
 	disableInteraction: boolean;
 	disambigKey: number | string;
 }
 
-interface FieldAddEntryProps {
-	schema: string;
+interface FieldAddEntryProps<T, U> {
+	fieldSettings: T;
+	defaultFieldData: U;
+	updateFieldData: (fieldData: U) => unknown;
 	updateValidity: (valid: boolean) => unknown;
 	showErrors: boolean;
 	disableInteraction: boolean;
@@ -26,14 +28,14 @@ interface FieldDisplayEntryProps {
 	info: string;
 }
 
-export interface Field<T> {
+export interface Field<T, U> {
 	id: string;
 	friendlyName: () => string;
 	getDefaultFieldSettings: () => T;
-	fieldSettingsToSchemaString: (fieldSettings?: T) => string;
+	getDefaultEntry: (fieldSettings: T) => U;
 	NewThingComponent: (props: FieldNewThingProps<T>) => React.ReactNode;
 	AddMenuIcon: (props: unknown) => React.ReactNode;
-	AddEntryComponent: (props: FieldAddEntryProps) => React.ReactNode;
+	AddEntryComponent: (props: FieldAddEntryProps<T, U>) => React.ReactNode;
 	DisplayEntryComponent: (props: FieldDisplayEntryProps) => React.ReactNode;
 }
 
@@ -42,4 +44,4 @@ export const FIELDS = {
 	[textField.id]: textField,
 	[rangeField.id]: rangeField,
 	[optionsField.id]: optionsField,
-} as { [key: string]: Field<unknown> };
+} as { [key: string]: Field<unknown, unknown> };

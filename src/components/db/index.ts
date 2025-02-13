@@ -44,5 +44,26 @@ db.version(2)
 			});
 	});
 
+db.version(3).upgrade((tx) => {
+	return tx
+		.table("things")
+		.toCollection()
+		.modify((thing: Thing) => {
+			const oldSchema = JSON.parse(thing.schema) as {
+				id: number;
+				name: string;
+				schema: string;
+			}[];
+
+			const newSchema = oldSchema.map(({ id, name, schema }) => ({
+				id,
+				name,
+				fieldSettings: JSON.parse(schema),
+			}));
+
+			thing.schema = JSON.stringify(newSchema);
+		});
+});
+
 export type { Thing, Entry };
 export { db };

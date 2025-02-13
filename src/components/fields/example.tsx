@@ -1,21 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Field } from "@/components/fields";
 
-interface Settings {
-	red: boolean;
-}
-
-type NewField = Field<Settings>;
-
-const fieldSettingsToSchemaString: NewField["fieldSettingsToSchemaString"] = (
-	fieldSettings,
-) => {
-	return JSON.stringify(fieldSettings);
-};
-
-const getDefaultFieldSettings: NewField["getDefaultFieldSettings"] = () => ({
-	red: true,
-});
+type NewField = Field<string, string>;
 
 const NewThingComponent: NewField["NewThingComponent"] = (_props) => {
 	return <div>New Field New Thing</div>;
@@ -36,8 +22,8 @@ const DisplayEntryComponent: NewField["DisplayEntryComponent"] = (_props) => {
 const newField: NewField = {
 	id: "newFieldId",
 	friendlyName: () => "New Field Friendly Name",
-	fieldSettingsToSchemaString,
-	getDefaultFieldSettings,
+	getDefaultFieldSettings: () => "",
+	getDefaultEntry: () => "",
 	NewThingComponent,
 	AddMenuIcon,
 	AddEntryComponent,

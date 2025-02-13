@@ -35,7 +35,7 @@ const getTh = (i: number) => {
 
 const NewThingComponent: DateField["NewThingComponent"] = ({
 	defaultFieldSettings: dfs,
-	updateFieldData,
+	updateFieldSettings,
 	disambigKey,
 }) => {
 	const [useDateSettings, setUseDate] = useState(dfs.date.type !== "anytime");
@@ -82,7 +82,7 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 	);
 
 	const updateData = useEffectEvent((fieldSettings: DateFieldSettings) => {
-		updateFieldData(fieldSettings);
+		updateFieldSettings(fieldSettings);
 	});
 
 	useEffect(() => {

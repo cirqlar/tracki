@@ -3,7 +3,6 @@ import {
 	useEffect,
 	useState,
 	experimental_useEffectEvent as useEffectEvent,
-	useMemo,
 } from "react";
 import { MdNotes } from "react-icons/md";
 
@@ -11,16 +10,18 @@ export interface TextSettings {
 	short: boolean;
 }
 
-type TextField = Field<TextSettings>;
+export type TextData = string;
+
+type TextField = Field<TextSettings, TextData>;
 
 const NewThingComponent: TextField["NewThingComponent"] = ({
 	defaultFieldSettings: dfs,
-	updateFieldData,
+	updateFieldSettings,
 }) => {
 	const [short, setShort] = useState(dfs.short);
 
 	const updateData = useEffectEvent((fieldSettings: TextSettings) => {
-		updateFieldData(fieldSettings);
+		updateFieldSettings(fieldSettings);
 	});
 
 	useEffect(() => {
@@ -50,15 +51,10 @@ const AddMenuIcon: TextField["AddMenuIcon"] = () => {
 };
 
 const AddEntryComponent: TextField["AddEntryComponent"] = ({
-	schema,
+	fieldSettings,
 	fieldLabel,
 }) => {
-	const unLeaded = useMemo(
-		() => JSON.parse(schema) as TextSettings,
-		[schema],
-	);
-
-	if (unLeaded.short) {
+	if (fieldSettings.short) {
 		return (
 			<input
 				id={fieldLabel}
@@ -81,8 +77,8 @@ const AddEntryComponent: TextField["AddEntryComponent"] = ({
 const textField: TextField = {
 	id: "fields/text/0001",
 	friendlyName: () => "Text",
-	fieldSettingsToSchemaString: (textSettings) => JSON.stringify(textSettings),
 	getDefaultFieldSettings: () => ({ short: true }),
+	getDefaultEntry: () => "",
 	NewThingComponent,
 	AddMenuIcon,
 	AddEntryComponent,

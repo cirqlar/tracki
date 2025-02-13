@@ -4,7 +4,6 @@ import {
 	useState,
 	experimental_useEffectEvent as useEffectEvent,
 	useRef,
-	useMemo,
 } from "react";
 import { MdLinearScale } from "react-icons/md";
 
@@ -21,17 +20,15 @@ export type RangeSettings =
 			allowInbetween: boolean;
 	  };
 
-export interface RangeSettingss {
-	start: number;
-	end: number;
-	step: number;
+export interface RangeData {
+	value: number;
 }
 
-type RangeField = Field<RangeSettings>;
+type RangeField = Field<RangeSettings, RangeData>;
 
 const NewThingComponent: RangeField["NewThingComponent"] = ({
 	defaultFieldSettings: dfs,
-	updateFieldData,
+	updateFieldSettings,
 }) => {
 	const optionInputRef = useRef<HTMLInputElement>(null);
 
@@ -51,7 +48,7 @@ const NewThingComponent: RangeField["NewThingComponent"] = ({
 	);
 
 	const updateData = useEffectEvent((fieldSettings: RangeSettings) => {
-		updateFieldData(fieldSettings);
+		updateFieldSettings(fieldSettings);
 	});
 
 	useEffect(() => {
@@ -188,27 +185,22 @@ const AddMenuIcon: RangeField["AddMenuIcon"] = () => {
 };
 
 const AddEntryComponent: RangeField["AddEntryComponent"] = ({
-	schema,
+	fieldSettings,
 	fieldLabel,
 }) => {
-	const unLeaded = useMemo(
-		() => JSON.parse(schema) as RangeSettings,
-		[schema],
-	);
-
-	if (unLeaded.type === "number") {
+	if (fieldSettings.type === "number") {
 		return (
 			<div className="flex w-full gap-2">
-				<p>{unLeaded.start}</p>
+				<p>{fieldSettings.start}</p>
 				<input
 					id={fieldLabel}
 					className="grow"
 					type="range"
-					min={unLeaded.start}
-					max={unLeaded.end}
-					step={unLeaded.step || "any"}
+					min={fieldSettings.start}
+					max={fieldSettings.end}
+					step={fieldSettings.step || "any"}
 				/>
-				<p>{unLeaded.end}</p>
+				<p>{fieldSettings.end}</p>
 			</div>
 		);
 	} else {
@@ -219,16 +211,16 @@ const AddEntryComponent: RangeField["AddEntryComponent"] = ({
 					className="h-5 grow"
 					type="range"
 					min={1}
-					max={unLeaded.options.length}
-					step={unLeaded.allowInbetween ? "any" : 1}
+					max={fieldSettings.options.length}
+					step={fieldSettings.allowInbetween ? "any" : 1}
 				/>
 				<div className="relative mx-1.75 h-8">
-					{unLeaded.options.map((opt, i) => (
+					{fieldSettings.options.map((opt, i) => (
 						<div
 							key={i}
 							className="group absolute top-0 bottom-0 left-(--left) flex flex-col not-first-of-type:not-last-of-type:-translate-x-1/2 last-of-type:right-0"
 							style={{
-								"--left": `${i === unLeaded.options.length - 1 ? "" : i * (100 / (unLeaded.options.length - 1))}%`,
+								"--left": `${i === fieldSettings.options.length - 1 ? "" : i * (100 / (fieldSettings.options.length - 1))}%`,
 							}}
 						>
 							<div className="mx-auto w-0 grow border border-current group-first-of-type:ml-0 group-last-of-type:mr-0"></div>
@@ -246,13 +238,14 @@ const AddEntryComponent: RangeField["AddEntryComponent"] = ({
 const rangeField: RangeField = {
 	id: "fields/range/0001",
 	friendlyName: () => "Range",
-	fieldSettingsToSchemaString: (rangeSettings) =>
-		JSON.stringify(rangeSettings),
 	getDefaultFieldSettings: () => ({
 		type: "number",
 		start: 1,
 		end: 5,
 		step: 1,
+	}),
+	getDefaultEntry: (settings) => ({
+		value: settings.type === "number" ? settings.start : 1,
 	}),
 	NewThingComponent,
 	AddMenuIcon,

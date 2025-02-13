@@ -1,9 +1,17 @@
 import { getThing } from "@/components/db/thing";
 import { FIELDS } from "@/components/fields";
 import dateField from "@/components/fields/dates";
+import { DateFieldSettings } from "@/components/fields/dates/types";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FormEventHandler, useMemo, useState } from "react";
+import {
+	experimental_useEffectEvent as useEffectEvent,
+	FormEventHandler,
+	useEffect,
+	useMemo,
+	useState,
+	Suspense,
+} from "react";
 
 export const Route = createFileRoute("/_app/app_/$thingId_/new")({
 	component: RouteComponent,
@@ -16,28 +24,60 @@ function RouteComponent() {
 		queryFn: () => getThing(Number(thingId)),
 	});
 
-	const schema = useMemo(() => {
+	const dateSettings = useMemo(() => {
+		if (!thing) return undefined;
+
+		return JSON.parse(thing.default_date_schema) as DateFieldSettings;
+	}, [thing]);
+
+	const fieldSettings = useMemo(() => {
 		if (!thing) return [];
 
 		return JSON.parse(thing.schema) as {
 			id: number;
 			name: string;
-			schema: string;
+			fieldSettings: unknown;
 		}[];
 	}, [thing]);
 
 	const [defaultDateValid, setDDV] = useState(true);
-	const [fieldsInfo, setFieldsInfo] = useState<boolean[]>(
-		Array.from({ length: schema.length }, () => true),
+	const [defaultDateData, setDDD] = useState(
+		dateField.getDefaultEntry(dateField.getDefaultFieldSettings()),
 	);
+	const [fieldsInfo, setFieldsInfo] = useState<
+		{ valid: boolean; data: unknown }[]
+	>([]);
 	const [showErrors, setShowErrors] = useState(false);
 
+	const [loaded, setLoaded] = useState(false);
 	const [doingStuff, setDoingStuff] = useState(false);
+
+	const setDefaults = useEffectEvent(() => {
+		setDDD(dateField.getDefaultEntry(dateSettings!));
+		setFieldsInfo(
+			Array.from({ length: fieldSettings.length }, (_, i) => ({
+				valid: true,
+				data: FIELDS[fieldSettings[i].id].getDefaultEntry(
+					fieldSettings[i].fieldSettings,
+				),
+			})),
+		);
+	});
+
+	useEffect(() => {
+		if (thing) {
+			setLoaded(true);
+
+			setDefaults();
+		} else {
+			setLoaded(false);
+		}
+	}, [thing]);
 
 	const validate = () => {
 		let anyErrors = defaultDateValid;
 		for (let i = 0; i < fieldsInfo.length; i++) {
-			anyErrors ||= fieldsInfo[i];
+			anyErrors ||= fieldsInfo[i].valid;
 		}
 
 		return !anyErrors;
@@ -58,7 +98,7 @@ function RouteComponent() {
 		setDoingStuff(false);
 	};
 
-	if (!thing) {
+	if (!thing || !loaded) {
 		return (
 			<div>
 				<p>Loading</p>
@@ -84,35 +124,48 @@ function RouteComponent() {
 
 			<div className="flex flex-col gap-2">
 				<label htmlFor="defDate-fieldLabel">Date & Time</label>
-				<dateField.AddEntryComponent
-					schema={thing.default_date_schema}
-					updateValidity={setDDV}
-					showErrors={showErrors}
-					disableInteraction={doingStuff}
-					disambigKey="defDate"
-					fieldLabel="defDate-fieldLabel"
-				/>
+				<Suspense fallback="Loading...">
+					<dateField.AddEntryComponent
+						fieldSettings={dateSettings!}
+						defaultFieldData={defaultDateData}
+						updateFieldData={setDDD}
+						updateValidity={setDDV}
+						showErrors={showErrors}
+						disableInteraction={doingStuff}
+						disambigKey="defDate"
+						fieldLabel="defDate-fieldLabel"
+					/>
+				</Suspense>
 			</div>
 
-			{schema.map((field, i) => {
+			{fieldSettings.map((field, i) => {
 				const fieldType = FIELDS[field.id];
 
 				return (
 					<div className="flex flex-col gap-2" key={i + 1}>
 						<label htmlFor={`${i}-fieldLabel`}>{field.name}</label>
-						<fieldType.AddEntryComponent
-							schema={field.schema}
-							updateValidity={(valid) =>
-								setFieldsInfo((prev) => {
-									prev[i] = valid;
-									return [...prev];
-								})
-							}
-							showErrors={showErrors}
-							disableInteraction={doingStuff}
-							disambigKey={i}
-							fieldLabel={`${i}-fieldLabel`}
-						/>
+						<Suspense fallback="Loading...">
+							<fieldType.AddEntryComponent
+								fieldSettings={field.fieldSettings}
+								defaultFieldData={fieldsInfo[i].data}
+								updateFieldData={(update) =>
+									setFieldsInfo((prev) => {
+										prev[i].data = update;
+										return [...prev];
+									})
+								}
+								updateValidity={(valid) =>
+									setFieldsInfo((prev) => {
+										prev[i].valid = valid;
+										return [...prev];
+									})
+								}
+								showErrors={showErrors}
+								disableInteraction={doingStuff}
+								disambigKey={i}
+								fieldLabel={`${i}-fieldLabel`}
+							/>
+						</Suspense>
 					</div>
 				);
 			})}
