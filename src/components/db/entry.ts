@@ -15,3 +15,7 @@ export function addEntry(
 		last_modified_at: getUnixTime(Date.now()),
 	});
 }
+
+export function getEntries(thing_id: number) {
+	return db.entries.where("thing_id").equals(thing_id).sortBy("created_for");
+}

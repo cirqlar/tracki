@@ -158,7 +158,7 @@ const NewThingComponent: RangeField["NewThingComponent"] = ({
 							className="border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
 						/>
 					</label>
-					<p className="text-sm text-red-500 empty:hidden">
+					<p className="col-span-full text-sm text-red-500 empty:hidden">
 						{showErrors && error}
 					</p>
 				</fieldset>

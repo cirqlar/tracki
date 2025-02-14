@@ -90,7 +90,7 @@ const AddEntryComponent: TextField["AddEntryComponent"] = ({
 					required={fieldSettings.required}
 					type="text"
 					placeholder="Write in me"
-					className="rounded-sm border-2 border-gray-800 bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-gray-800"
+					className="w-full rounded-sm border-2 border-gray-800 bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-gray-800"
 					defaultValue={value}
 					onChange={(e) => setValue(e.target.value)}
 				/>
@@ -108,7 +108,7 @@ const AddEntryComponent: TextField["AddEntryComponent"] = ({
 				<textarea
 					id={fieldLabel}
 					required={fieldSettings.required}
-					className="min-h-24 rounded-sm border-2 border-gray-800 bg-white px-4 py-4 outline-none focus-visible:border-current dark:bg-gray-800"
+					className="min-h-24 w-full rounded-sm border-2 border-gray-800 bg-white px-4 py-4 outline-none focus-visible:border-current dark:bg-gray-800"
 					placeholder="Write in me"
 					defaultValue={value}
 					onChange={(e) => setValue(e.target.value)}

@@ -176,23 +176,23 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 	return (
 		<div>
 			<p className="mb-2">Date Settings</p>
-			<div className="grid grid-cols-2 rounded-lg border-2">
-				<label className="border-r-2 px-4 py-2 text-center has-checked:bg-white/30">
+			<div className="grid grid-cols-2">
+				<label className="rounded-l-sm border-2 border-r-0 px-4 py-2 text-center focus-within:border-primary has-checked:border-r-2 has-checked:bg-white/30">
 					Any Day
 					<input
 						type="radio"
 						name={`${disambigKey}-dateType`}
-						className="hidden"
+						className="h-0 w-0 opacity-0 outline-none"
 						defaultChecked={true}
 						onChange={(e) => e.target.checked && setUseDate(false)}
 					/>
 				</label>
-				<label className="px-4 py-2 text-center has-checked:bg-white/30">
+				<label className="rounded-r-sm border-2 border-l-0 px-4 py-2 text-center focus-within:border-primary has-checked:border-l-2 has-checked:bg-white/30">
 					Specific Days
 					<input
 						type="radio"
 						name={`${disambigKey}-dateType`}
-						className="hidden"
+						className="h-0 w-0 opacity-0 outline-none"
 						onChange={(e) => e.target.checked && setUseDate(true)}
 					/>
 				</label>
@@ -360,23 +360,23 @@ const NewThingComponent: DateField["NewThingComponent"] = ({
 			)}
 
 			<p className="mt-4 mb-2">Time Settings</p>
-			<div className="mt-2 grid grid-cols-2 rounded-lg border-2">
-				<label className="border-r-2 px-4 py-2 text-center has-checked:bg-white/30">
+			<div className="mt-2 grid grid-cols-2">
+				<label className="rounded-l-sm border-2 border-r-0 px-4 py-2 text-center focus-within:border-primary has-checked:border-r-2 has-checked:bg-white/30">
 					Any Time
 					<input
 						type="radio"
 						name={`${disambigKey}-timeType`}
-						className="hidden"
+						className="h-0 w-0 opacity-0 outline-none"
 						defaultChecked={true}
 						onChange={(e) => e.target.checked && setUseTime(false)}
 					/>
 				</label>
-				<label className="px-4 py-2 text-center has-checked:bg-white/30">
+				<label className="rounded-r-sm border-2 border-l-0 px-4 py-2 text-center focus-within:border-primary has-checked:border-l-2 has-checked:bg-white/30">
 					Specific Times
 					<input
 						type="radio"
 						name={`${disambigKey}-timeType`}
-						className="hidden"
+						className="h-0 w-0 opacity-0 outline-none"
 						onChange={(e) => e.target.checked && setUseTime(true)}
 					/>
 				</label>

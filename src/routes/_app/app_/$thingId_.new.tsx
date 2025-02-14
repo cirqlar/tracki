@@ -6,8 +6,7 @@ import {
 	useState,
 	Suspense,
 } from "react";
-import { getUnixTime } from "date-fns";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 import { addEntry } from "@/components/db/entry";
@@ -22,6 +21,8 @@ export const Route = createFileRoute("/_app/app_/$thingId_/new")({
 
 function RouteComponent() {
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+
 	const { thingId } = Route.useParams();
 	const { data: thing } = useQuery({
 		queryKey: ["thing", thingId],
@@ -79,7 +80,7 @@ function RouteComponent() {
 	}, [thing]);
 
 	const validate = () => {
-		let anyErrors = defaultDateValid;
+		let anyErrors = !defaultDateValid;
 		for (let i = 0; i < fieldsInfo.length; i++) {
 			anyErrors ||= !fieldsInfo[i].valid;
 		}
@@ -102,8 +103,10 @@ function RouteComponent() {
 						fieldsInfo.map(({ data }) => data),
 					),
 				},
-				getUnixTime(Date.now()),
+				defaultDateData.datetime,
 			);
+
+			queryClient.invalidateQueries({ queryKey: ["entries", thingId] });
 
 			navigate({
 				to: "/app/$thingId",
