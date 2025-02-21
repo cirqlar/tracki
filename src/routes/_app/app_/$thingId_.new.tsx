@@ -2,7 +2,6 @@ import {
 	experimental_useEffectEvent as useEffectEvent,
 	FormEventHandler,
 	useEffect,
-	useMemo,
 	useState,
 	Suspense,
 } from "react";
@@ -12,8 +11,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { addEntry } from "@/components/db/entry";
 import { getThing } from "@/components/db/thing";
 import { FIELDS } from "@/components/fields";
-import dateField from "@/components/fields/dates";
-import { DateFieldSettings } from "@/components/fields/dates/types";
+import { Entry } from "@/components/db";
+import { DateFieldData } from "@/components/fields/dates/types";
 
 export const Route = createFileRoute("/_app/app_/$thingId_/new")({
 	component: RouteComponent,
@@ -27,46 +26,30 @@ function RouteComponent() {
 	const { data: thing } = useQuery({
 		queryKey: ["thing", thingId],
 		queryFn: () => getThing(Number(thingId)),
+		staleTime: Infinity,
 	});
 
-	const dateSettings = useMemo(() => {
-		if (!thing) return undefined;
-
-		return JSON.parse(thing.default_date_schema) as DateFieldSettings;
-	}, [thing]);
-
-	const fieldSettings = useMemo(() => {
-		if (!thing) return [];
-
-		return JSON.parse(thing.schema) as {
-			id: number;
-			name: string;
-			fieldSettings: unknown;
-		}[];
-	}, [thing]);
-
-	const [defaultDateValid, setDDV] = useState(true);
-	const [defaultDateData, setDDD] = useState(
-		dateField.getDefaultEntry(dateField.getDefaultFieldSettings()),
-	);
-	const [fieldsInfo, setFieldsInfo] = useState<
-		{ valid: boolean; data: unknown }[]
-	>([]);
+	const [fields, setFields] = useState<Entry["fields"]>({});
+	const [validity, setValidity] = useState<{ [key: string]: boolean }>({});
 	const [showErrors, setShowErrors] = useState(false);
 
 	const [loaded, setLoaded] = useState(false);
 	const [doingStuff, setDoingStuff] = useState(false);
 
 	const setDefaults = useEffectEvent(() => {
-		setDDD(dateField.getDefaultEntry(dateSettings!));
-		setFieldsInfo(
-			Array.from({ length: fieldSettings.length }, (_, i) => ({
-				valid: true,
-				data: FIELDS[fieldSettings[i].id].getDefaultEntry(
-					fieldSettings[i].fieldSettings,
-				),
-			})),
-		);
+		const defFields: typeof fields = {};
+		const defValids: typeof validity = {};
+
+		for (let i = 0; i < thing!.fields.length; i++) {
+			const curThing = thing!.fields[i];
+			defFields[curThing.key] = FIELDS[curThing.field_id].getDefaultEntry(
+				curThing.settings,
+			);
+			defValids[curThing.key] = true;
+		}
+
+		setFields(defFields);
+		setValidity(defValids);
 	});
 
 	useEffect(() => {
@@ -80,9 +63,9 @@ function RouteComponent() {
 	}, [thing]);
 
 	const validate = () => {
-		let anyErrors = !defaultDateValid;
-		for (let i = 0; i < fieldsInfo.length; i++) {
-			anyErrors ||= !fieldsInfo[i].valid;
+		let anyErrors = false;
+		for (let i = 0; i < thing!.fields.length; i++) {
+			anyErrors ||= !validity[thing!.fields[i].key];
 		}
 
 		return !anyErrors;
@@ -95,16 +78,12 @@ function RouteComponent() {
 		setDoingStuff(true);
 
 		if (validate()) {
-			/* const entryId = */ await addEntry(
-				{
-					thing_id: Number(thingId),
-
-					entry_data: JSON.stringify(
-						fieldsInfo.map(({ data }) => data),
-					),
-				},
-				defaultDateData.datetime,
-			);
+			/* const entryId = */ await addEntry({
+				thing_id: Number(thingId),
+				created_for: (fields[thing!.fields[0].key] as DateFieldData)
+					.date,
+				fields: fields,
+			});
 
 			queryClient.invalidateQueries({ queryKey: ["entries", thingId] });
 
@@ -142,7 +121,7 @@ function RouteComponent() {
 					</Link>
 				</p>
 			</header>
-
+			{/* 
 			<div className="flex flex-col gap-2">
 				<label htmlFor="defDate-fieldLabel">Date & Time</label>
 				<Suspense fallback="Loading...">
@@ -157,29 +136,29 @@ function RouteComponent() {
 						fieldLabel="defDate-fieldLabel"
 					/>
 				</Suspense>
-			</div>
+			</div> */}
 
-			{fieldSettings.map((field, i) => {
-				const fieldType = FIELDS[field.id];
+			{thing!.fields.map((field, i) => {
+				const fieldType = FIELDS[field.field_id];
 
 				return (
 					<div className="flex flex-col gap-2" key={i + 1}>
 						<label htmlFor={`${i}-fieldLabel`}>{field.name}</label>
 						<Suspense fallback="Loading...">
 							<fieldType.AddEntryComponent
-								fieldSettings={field.fieldSettings}
-								defaultFieldData={fieldsInfo[i].data}
+								fieldSettings={field.settings}
+								defaultFieldData={fields[field.key]}
 								updateFieldData={(update) =>
-									setFieldsInfo((prev) => {
-										prev[i].data = update;
-										return [...prev];
-									})
+									setFields((prev) => ({
+										...prev,
+										[field.key]: update,
+									}))
 								}
 								updateValidity={(valid) =>
-									setFieldsInfo((prev) => {
-										prev[i].valid = valid;
-										return [...prev];
-									})
+									setValidity((prev) => ({
+										...prev,
+										[field.key]: valid,
+									}))
 								}
 								showErrors={showErrors}
 								disableInteraction={doingStuff}

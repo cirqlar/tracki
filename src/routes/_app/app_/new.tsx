@@ -4,38 +4,30 @@ import { FormEventHandler, Suspense, useState } from "react";
 import { FIELDS } from "@/components/fields";
 import { Modal } from "@/components/modal";
 import LeftArrow from "@/components/icons/left-arrow";
-import type { DateFieldSettings } from "@/components/fields/dates/types";
-import DateNewThingComponent from "@/components/fields/dates/newThing";
 import dateField from "@/components/fields/dates";
 import { MdDragIndicator } from "react-icons/md";
 import { addThing, checkNameExists } from "@/components/db/thing";
 import { useQueryClient } from "@tanstack/react-query";
+import { type ThingField } from "@/components/db";
 
 export const Route = createFileRoute("/_app/app_/new")({
 	component: RouteComponent,
 });
-
-interface AddThingField<T> {
-	id: string;
-	fieldSettings: T;
-	name: string;
-	valid: boolean;
-}
 
 function RouteComponent() {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const [name, setName] = useState("");
-	const [defaultDateField, setDefaultDateField] = useState<
-		AddThingField<DateFieldSettings>
-	>({
-		id: dateField.id,
-		fieldSettings: dateField.getDefaultFieldSettings(),
-		name: "Default Date",
-		valid: true,
-	});
-	const [fields, setFields] = useState<AddThingField<unknown>[]>([]);
+	const [fields, setFields] = useState<ThingField<unknown>[]>([
+		{
+			field_id: dateField.id,
+			name: "Date & Time",
+			settings: dateField.getDefaultFieldSettings(),
+			key: "",
+		},
+	]);
+	const [validity, setValidity] = useState([true]);
 
 	const [showErrors, setShowErrors] = useState(false);
 	const [nameError, setNameError] = useState("");
@@ -51,8 +43,8 @@ function RouteComponent() {
 			setNameError("Name is already taken by another thing");
 		}
 
-		for (let i = 0; i < fields.length; i++) {
-			anyErrors ||= !fields[i].valid;
+		for (let i = 0; i < validity.length; i++) {
+			anyErrors ||= !validity[i];
 		}
 
 		return !anyErrors;
@@ -66,18 +58,15 @@ function RouteComponent() {
 
 		if (await validate()) {
 			try {
+				// TODO: Gen keys
+				const fieldsWithKeys = fields.map((field, i) => ({
+					...field,
+					key: `${i}${i}${i}${i}`,
+				}));
+
 				const thingId = await addThing({
 					name: name,
-					default_date_schema: JSON.stringify(
-						defaultDateField.fieldSettings,
-					),
-					schema: JSON.stringify(
-						fields.map((v) => ({
-							id: v.id,
-							name: v.name,
-							fieldSettings: v.fieldSettings,
-						})),
-					),
+					fields: fieldsWithKeys,
 				});
 
 				queryClient.invalidateQueries({ queryKey: ["things"] });
@@ -139,13 +128,14 @@ function RouteComponent() {
 					</p>
 				</div>
 
-				<div className="rounded-sm bg-gray-800 p-4">
+				{/* <div className="rounded-sm bg-gray-800 p-4">
 					<div className="mb-4 flex items-center justify-between gap-4">
 						<input
 							type="text"
 							placeholder="Field Title"
 							name="defDate-fieldName"
-							value="Created Date (required)"
+							defaultValue={fields[0].name}
+							// value="Created Date (required)"
 							disabled
 							className="grow border-b-2 py-2 outline-none"
 						/>
@@ -153,15 +143,22 @@ function RouteComponent() {
 					<Suspense fallback={"Loading"}>
 						<DateNewThingComponent
 							defaultFieldSettings={
-								defaultDateField.fieldSettings
+								fields[0].settings as DateFieldSettings
 							}
 							updateFieldSettings={(update) => {
-								setDefaultDateField((prev) => ({
-									...prev,
-									fieldSettings: update,
-								}));
+								setFields((prev) => {
+									prev[0] = {
+										...prev[0],
+										settings: update,
+									};
+
+									return [...prev];
+								});
 							}}
 							updateValidity={(valid) => {
+								setValidity(prev => {
+									prev[0] = 
+								})
 								setDefaultDateField((prev) => ({
 									...prev,
 									valid,
@@ -172,11 +169,11 @@ function RouteComponent() {
 							disambigKey="defDate"
 						/>
 					</Suspense>
-				</div>
+				</div> */}
 
 				<div className="mt-4 flex w-full flex-col gap-4">
 					{fields.map((field, i) => {
-						const fieldType = FIELDS[field.id];
+						const fieldType = FIELDS[field.field_id];
 						return (
 							<div key={i} className="rounded-sm bg-gray-800 p-4">
 								<div className="mb-4 flex items-center justify-between gap-4">
@@ -189,27 +186,27 @@ function RouteComponent() {
 											fields[i].name = e.target.value;
 											return [...fields];
 										}}
+										disabled={i === 0}
 										className="grow border-b-2 py-2 outline-none"
 										aria-label={`Title of ${fieldType.friendlyName()} field`}
 									/>
-									<MdDragIndicator className="h-5 w-5" />
+									{i !== 0 && (
+										<MdDragIndicator className="h-5 w-5" />
+									)}
 								</div>
 								<Suspense fallback={"Loading"}>
 									<fieldType.NewThingComponent
-										defaultFieldSettings={
-											field.fieldSettings
-										}
+										defaultFieldSettings={field.settings}
 										updateFieldSettings={(newData) =>
 											setFields((fields) => {
-												fields[i].fieldSettings =
-													newData;
+												fields[i].settings = newData;
 												return [...fields];
 											})
 										}
 										updateValidity={(valid) =>
-											setFields((fields) => {
-												fields[i].valid = valid;
-												return [...fields];
+											setValidity((prev) => {
+												prev[i] = valid;
+												return [...prev];
 											})
 										}
 										showErrors={showErrors}
@@ -248,11 +245,11 @@ function RouteComponent() {
 											setFields((fields) => [
 												...fields,
 												{
-													id: fieldType.id,
-													fieldSettings:
+													field_id: fieldType.id,
+													settings:
 														fieldType.getDefaultFieldSettings(),
 													name: `${fieldType.friendlyName()} ${fields.length}`,
-													valid: true,
+													key: "",
 												},
 											]);
 											setShowModal(false);

@@ -2,7 +2,7 @@ import { getEntries } from "@/components/db/entry";
 import { getThing } from "@/components/db/thing";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { format, fromUnixTime } from "date-fns";
+import { format } from "date-fns";
 
 export const Route = createFileRoute("/_app/app_/$thingId")({
 	component: RouteComponent,
@@ -31,9 +31,7 @@ function RouteComponent() {
 		<div className="flex h-full w-full flex-col gap-2">
 			<h1 className="text-2xl">{thing.name}</h1>
 			{entries?.map((entry) => (
-				<div key={entry.id}>
-					{format(fromUnixTime(entry.created_for), "Pp")}
-				</div>
+				<div key={entry.id}>{format(entry.created_for, "Pp")}</div>
 			))}
 
 			<Link

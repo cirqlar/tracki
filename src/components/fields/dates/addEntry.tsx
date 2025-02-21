@@ -4,7 +4,7 @@ import {
 	useEffect,
 } from "react";
 import type { DateField } from "./types";
-import { format, fromUnixTime, getUnixTime } from "date-fns";
+import { format } from "date-fns";
 
 const AddEntryComponent: DateField["AddEntryComponent"] = ({
 	defaultFieldData: dfs,
@@ -12,12 +12,8 @@ const AddEntryComponent: DateField["AddEntryComponent"] = ({
 	fieldLabel,
 	...props
 }) => {
-	const [date, setDate] = useState(
-		format(fromUnixTime(dfs.datetime), "yyyy-MM-dd"),
-	);
-	const [time, setTime] = useState(
-		format(fromUnixTime(dfs.datetime), "HH:mm"),
-	);
+	const [date, setDate] = useState(format(dfs.date, "yyyy-MM-dd"));
+	const [time, setTime] = useState(format(dfs.date, "HH:mm"));
 
 	const updateFieldData = useEffectEvent(props.updateFieldData);
 	// const readFieldSettings = useEffectEvent(() => fieldSettings);
@@ -32,7 +28,7 @@ const AddEntryComponent: DateField["AddEntryComponent"] = ({
 			`${date}T${time}:00.000${sign}${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`,
 		);
 
-		updateFieldData({ datetime: getUnixTime(nDate) });
+		updateFieldData({ date: nDate });
 	}, [date, time]);
 
 	return (

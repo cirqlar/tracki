@@ -1,69 +1,48 @@
 import Dexie, { type EntityTable } from "dexie";
 
+interface ThingField<T> {
+	field_id: string;
+	name: string;
+	settings: T;
+
+	// randomly generated unique key for use in entry
+	// Problem: I want to be able to edit things but using a user defined key (name)
+	// can lead to renames being hard to handle
+	key: string;
+}
+
 interface Thing {
 	id: number;
 	name: string;
-	default_date_schema: string;
-	schema: string;
-	created_at: number;
-	last_modified_at: number;
+
+	created_at: Date;
+	last_modified_at: Date;
+
+	fields: ThingField<unknown>[];
 }
 
 interface Entry {
 	id: number;
 	thing_id: number;
-	created_for: number;
-	created_at: number;
-	last_modified_at: number;
-	entry_data: string;
+
+	created_at: Date;
+	last_modified_at: Date;
+
+	created_for: Date;
+
+	fields: { [key: string]: unknown };
 }
 
 const db = new Dexie("TrackiDatabase") as Dexie & {
-	things: EntityTable<
-		Thing,
-		"id" // primary key "id" (for the typings only)
-	>;
+	things: EntityTable<Thing, "id">;
 	entries: EntityTable<Entry, "id">;
 };
 
 // Schema declaration:
 db.version(1).stores({
-	things: "++id, &name, created_at, last_modified_at", // primary key "id" (for the runtime!)
-	entries: "++id, thing_id, created_at, last_modified_at", // primary key "id" (for the runtime!)
-});
-db.version(2)
-	.stores({
-		entries: "++id, thing_id, created_for, created_at, last_modified_at", // add created for
-	})
-	.upgrade((tx) => {
-		return tx
-			.table("entries")
-			.toCollection()
-			.modify((entry: Entry) => {
-				entry.created_for = entry.created_at;
-			});
-	});
-
-db.version(3).upgrade((tx) => {
-	return tx
-		.table("things")
-		.toCollection()
-		.modify((thing: Thing) => {
-			const oldSchema = JSON.parse(thing.schema) as {
-				id: number;
-				name: string;
-				schema: string;
-			}[];
-
-			const newSchema = oldSchema.map(({ id, name, schema }) => ({
-				id,
-				name,
-				fieldSettings: JSON.parse(schema),
-			}));
-
-			thing.schema = JSON.stringify(newSchema);
-		});
+	things: "++id, &name, created_at, last_modified_at",
+	entries: "++id, thing_id, created_for, created_at, last_modified_at",
 });
 
-export type { Thing, Entry };
+export type { Thing, Entry, ThingField };
 export { db };

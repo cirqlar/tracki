@@ -1,7 +1,7 @@
 import { getThings } from "@/components/db/thing";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { format, fromUnixTime } from "date-fns";
+import { format } from "date-fns";
 
 export const Route = createFileRoute("/_app/app")({
 	component: RouteComponent,
@@ -47,7 +47,7 @@ function RouteComponent() {
 						{thing.name}
 					</Link>
 					<p className="text-sm text-gray-400">
-						{format(fromUnixTime(thing.created_at), "PPP")}
+						{format(thing.created_at, "PPP")}
 					</p>
 				</div>
 			))}

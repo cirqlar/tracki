@@ -54,7 +54,7 @@ export type DateFieldSettings = {
 };
 
 export type DateFieldData = {
-	datetime: number;
+	date: Date;
 };
 
 export type DateType = DateSettings["type"];

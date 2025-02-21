@@ -1,4 +1,3 @@
-import { getUnixTime } from "date-fns";
 import { type DateField } from "./types";
 import { lazy } from "react";
 
@@ -10,7 +9,7 @@ const dateField: DateField = {
 		time: { type: "anytime" },
 	}),
 	getDefaultEntry: () => ({
-		datetime: getUnixTime(new Date()),
+		date: new Date(),
 	}),
 	NewThingComponent: lazy(() => import("./newThing")),
 	AddMenuIcon: lazy(() => import("./addMenu")),
