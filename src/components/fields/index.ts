@@ -23,9 +23,9 @@ interface FieldAddEntryProps<T, U> {
 	fieldLabel: string;
 }
 
-interface FieldDisplayEntryProps {
-	schema: string;
-	info: string;
+interface FieldDisplayEntryProps<T, U> {
+	settings: T;
+	data: U;
 }
 
 export interface Field<T, U> {
@@ -36,7 +36,9 @@ export interface Field<T, U> {
 	NewThingComponent: (props: FieldNewThingProps<T>) => React.ReactNode;
 	AddMenuIcon: (props: unknown) => React.ReactNode;
 	AddEntryComponent: (props: FieldAddEntryProps<T, U>) => React.ReactNode;
-	DisplayEntryComponent: (props: FieldDisplayEntryProps) => React.ReactNode;
+	DisplayEntryComponent: (
+		props: FieldDisplayEntryProps<T, U>,
+	) => React.ReactNode;
 }
 
 export const FIELDS = {
