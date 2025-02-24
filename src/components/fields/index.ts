@@ -1,5 +1,5 @@
 import dateField from "./dates";
-import optionsField from "./options";
+import tagsField from "./tags";
 import rangeField from "./ranges";
 import textField from "./text";
 
@@ -45,5 +45,5 @@ export const FIELDS = {
 	[dateField.id]: dateField,
 	[textField.id]: textField,
 	[rangeField.id]: rangeField,
-	[optionsField.id]: optionsField,
+	[tagsField.id]: tagsField,
 } as { [key: string]: Field<unknown, unknown> };

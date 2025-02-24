@@ -171,7 +171,7 @@ function RouteComponent() {
 					</Suspense>
 				</div> */}
 
-				<div className="mt-4 flex w-full flex-col gap-4">
+				<div className="flex w-full flex-col gap-4">
 					{fields.map((field, i) => {
 						const fieldType = FIELDS[field.field_id];
 						return (
@@ -281,7 +281,7 @@ function RouteComponent() {
 
 				<button
 					type="submit"
-					className="mt-4 w-full rounded-sm bg-primary px-4 py-2 text-xs font-normal text-white uppercase"
+					className="w-full rounded-sm bg-primary px-4 py-2 text-xs font-normal text-white uppercase"
 					form="newThingForm"
 					disabled={doingStuff}
 				>

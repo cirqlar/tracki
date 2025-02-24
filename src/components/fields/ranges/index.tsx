@@ -5,7 +5,7 @@ import {
 	experimental_useEffectEvent as useEffectEvent,
 	useRef,
 } from "react";
-import { MdLinearScale } from "react-icons/md";
+import { MdClose, MdLinearScale } from "react-icons/md";
 
 export type RangeSettings =
 	| {
@@ -192,12 +192,23 @@ const NewThingComponent: RangeField["NewThingComponent"] = ({
 						/>
 					</label>
 					<div className="flex flex-wrap gap-2">
-						{options.map((val) => (
+						{options.map((val, i) => (
 							<div
 								key={val}
-								className="rounded-sm bg-white px-4 py-2 text-black"
+								className="flex items-center gap-2 rounded-sm bg-white px-4 py-2 text-black"
 							>
-								{val}
+								<p>{val}</p>
+								<button
+									aria-label="Remove Option"
+									onClick={() =>
+										setOptions((prev) => {
+											prev.splice(i, 1);
+											return [...prev];
+										})
+									}
+								>
+									<MdClose />
+								</button>
 							</div>
 						))}
 					</div>
