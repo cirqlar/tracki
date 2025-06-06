@@ -1,8 +1,9 @@
+import { format } from "date-fns";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+
 import { getEntries } from "@/components/db/entry";
 import { getThing } from "@/components/db/thing";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { format } from "date-fns";
 
 export const Route = createFileRoute("/_app/app_/$thingId")({
 	component: RouteComponent,
