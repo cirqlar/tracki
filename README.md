@@ -27,3 +27,6 @@ To be a an app that allows custom tracking of anything (within reason).
 - [ ] Ability to customize thing dashboard
   - [ ] Custom graphs
   - [ ] Most recent entry
+- [ ] More Graphs
+  - [ ] Comarpison graphs (time)
+  - [ ] Comparision graphs (fields)
