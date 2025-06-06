@@ -350,6 +350,14 @@ const AddEntryComponent: RangeField["AddEntryComponent"] = ({
 const rangeField: RangeField = {
 	id: "fields/range/0001",
 	friendlyName: () => "Range",
+	canProvideData: true,
+	transformData: (data) => {
+		return {
+			fields: ["range"],
+			d_range: data.value,
+		};
+	},
+	defaultAggregation: "average",
 	getDefaultFieldSettings: () => ({
 		type: "number",
 		start: 1,

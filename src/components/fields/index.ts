@@ -28,18 +28,39 @@ interface FieldDisplayEntryProps<T, U> {
 	data: U;
 }
 
-export interface Field<T, U> {
+export type TransformedDataKey = `d_${string}`;
+
+export interface TransformedData {
+	[key: TransformedDataKey]: number;
+	fields: string[];
+}
+
+export type Field<T, U> = {
+	// Field info
 	id: string;
 	friendlyName: () => string;
+
+	// Defaults
 	getDefaultFieldSettings: () => T;
 	getDefaultEntry: (fieldSettings: T) => U;
+
+	// Components
 	NewThingComponent: (props: FieldNewThingProps<T>) => React.ReactNode;
 	AddMenuIcon: (props: unknown) => React.ReactNode;
 	AddEntryComponent: (props: FieldAddEntryProps<T, U>) => React.ReactNode;
 	DisplayEntryComponent: (
 		props: FieldDisplayEntryProps<T, U>,
 	) => React.ReactNode;
-}
+} & (
+	| {
+			canProvideData: true;
+			defaultAggregation: "average" | "addition";
+
+			// helpers/providers
+			transformData: (data: U, settings: T) => TransformedData;
+	  }
+	| { canProvideData?: false }
+);
 
 export const FIELDS = {
 	[dateField.id]: dateField,

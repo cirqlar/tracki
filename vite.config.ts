@@ -10,6 +10,7 @@ import path from "path";
 const host = process.env.TAURI_DEV_HOST;
 
 const WITHOUT_TAURI = !!(process.env.WITHOUT_TAURI ?? false);
+const PORT = process.env.PORT ? Number(process.env.PORT) : undefined;
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
@@ -28,6 +29,9 @@ export default defineConfig(async () => {
 			plugins: [...baseConfig.plugins, vercel()],
 			vercel: {
 				rewrites: [{ source: "/app/:path*", destination: "/" }],
+			},
+			server: {
+				port: PORT,
 			},
 		};
 	} else {
