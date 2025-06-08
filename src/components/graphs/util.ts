@@ -51,8 +51,8 @@ export function useSimpleData(
 			return undefined;
 		}
 
-		let data: SingleData[] = [];
-		let data_fields: TransformedDataKey[] = [];
+		const data: SingleData[] = [];
+		const data_fields: TransformedDataKey[] = [];
 
 		const first_data = field_data.transformData(
 			entries[0].fields[fieldKey],
@@ -70,7 +70,7 @@ export function useSimpleData(
 		}
 
 		for (let e = 0; e < entries.length; e++) {
-			let obj: SingleData = {
+			const obj: SingleData = {
 				date: entries[e].created_for.getTime(),
 			};
 

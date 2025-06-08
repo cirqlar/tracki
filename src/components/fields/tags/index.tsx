@@ -159,7 +159,7 @@ const tagsField: TagsField = {
 	friendlyName: () => "Tags",
 	canProvideData: true,
 	transformData: (data, settings) => {
-		let obj: TransformedData = {
+		const obj: TransformedData = {
 			fields: settings.tags,
 		};
 
