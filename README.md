@@ -14,8 +14,8 @@ To be a an app that allows custom tracking of anything (within reason).
 - [ ] Simple Graphs
   - [x] Simple line graph
   - [x] Simple area graph
-  - [-] Grouping of data into time buckets (hours, days, weeks)
-    - TODO: provide min and max for fields that average (so that I can add error bars)
+  - [x] Grouping of data into time buckets (hours, days, weeks)
+  - [ ] Grouping: Provide min and max for fields that average (so that I can add error bars)
   - [ ] Simple bar graph
   - [ ] Stacked variants of previous graphs
 - [ ] More fields/functionality
