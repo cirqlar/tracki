@@ -351,6 +351,7 @@ const rangeField: RangeField = {
 	id: "fields/range/0001",
 	friendlyName: () => "Range",
 	canProvideData: true,
+	useDataName: false,
 	transformData: (data) => {
 		return {
 			fields: ["range"],

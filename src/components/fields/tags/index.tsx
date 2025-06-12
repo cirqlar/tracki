@@ -158,6 +158,7 @@ const tagsField: TagsField = {
 	id: "fields/tags/0001",
 	friendlyName: () => "Tags",
 	canProvideData: true,
+	useDataName: true,
 	transformData: (data, settings) => {
 		const obj: TransformedData = {
 			fields: settings.tags,

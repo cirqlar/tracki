@@ -2,26 +2,26 @@ import { format } from "date-fns";
 import {
 	Legend,
 	Line,
-	LineChart,
+	LineChart as RechartsLineChart,
 	ResponsiveContainer,
 	XAxis,
 	YAxis,
 } from "recharts";
 
-import { GRAPH_COLOURS, SimpleDataOptions, useSimpleData } from "./util";
+import { DataOptions, FieldOptions, GRAPH_COLOURS, useData } from "./util";
 
-interface SingleLineProps {
+interface LineChartProps {
 	thingId: number;
-	fieldKey: string;
-	options?: SimpleDataOptions;
+	fields: FieldOptions[];
+	options?: DataOptions;
 }
 
-export default function SimpleLine(props: SingleLineProps) {
+export default function LineChart(props: LineChartProps) {
 	const {
 		data: transformedData,
 		startDate,
 		endDate,
-	} = useSimpleData(props.thingId, props.fieldKey, props.options);
+	} = useData(props.thingId, props.fields, props.options);
 
 	if (!transformedData) {
 		return (
@@ -33,7 +33,7 @@ export default function SimpleLine(props: SingleLineProps) {
 
 	return (
 		<ResponsiveContainer width="100%">
-			<LineChart data={transformedData.data}>
+			<RechartsLineChart data={transformedData.data}>
 				<XAxis
 					dataKey="date"
 					type="number"
@@ -53,13 +53,15 @@ export default function SimpleLine(props: SingleLineProps) {
 				{transformedData.fields.map((k, i) => (
 					<Line
 						type="monotone"
-						key={k}
-						dataKey={k}
-						stroke={GRAPH_COLOURS[i]}
+						key={k.key}
+						dataKey={k.key}
+						name={k.name}
+						connectNulls
+						stroke={GRAPH_COLOURS[i % GRAPH_COLOURS.length]}
 					/>
 				))}
 				{transformedData.fields.length > 1 && <Legend />}
-			</LineChart>
+			</RechartsLineChart>
 		</ResponsiveContainer>
 	);
 }

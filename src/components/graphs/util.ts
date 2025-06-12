@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Entry, Thing } from "@/components/db";
 import { getThing } from "@/components/db/thing";
 import { getEntriesByDate } from "@/components/db/entry";
-import { FIELDS, TransformedDataKey } from "@/components/fields";
+import { FIELDS, FieldWithData, TransformedDataKey } from "@/components/fields";
 
 // TODO: Pick better colours
 export const GRAPH_COLOURS = [
@@ -22,136 +22,190 @@ interface SingleData {
 	date: number;
 	[key: TransformedDataKey]: number;
 }
-
-export interface SimpleDataOptions {
-	fields?: string[] | "all";
+export interface DataOptions {
 	periodCount?: number;
 	periodKind?: "hours" | "days" | "weeks" | "months";
 	grouping?: "none" | "hours" | "days" | "weeks";
 	start?: Date;
 }
 
-function transformData(
-	thing: Thing,
-	entries: Entry[],
-	fieldKey: string,
-	oFields: SimpleDataOptions["fields"],
-) {
-	const field = thing.fields.find((v) => v.key == fieldKey);
-	if (!field) {
-		return undefined;
+export interface FieldOptions {
+	key: string;
+	fields?: string[] | "all";
+}
+
+export interface TransformedField {
+	key: TransformedDataKey;
+	name: string;
+}
+
+function transformData(thing: Thing, entries: Entry[], fields: FieldOptions[]) {
+	const fieldInfos = [];
+	const outFields: TransformedField[] = [];
+	const outAggregation: ("average" | "addition")[] = [];
+
+	for (let fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
+		const currentFieldKey = fields[fieldIndex].key;
+		const currentField = thing.fields.find((v) => v.key == currentFieldKey);
+		if (!currentField || !FIELDS[currentField.field_id].canProvideData) {
+			continue;
+		}
+
+		const currentFieldSpec = FIELDS[currentField.field_id] as FieldWithData;
+
+		const first_data = currentFieldSpec.transformData(
+			entries[0].fields[currentFieldKey],
+			currentField.settings,
+		);
+		let fields_to_check: string[];
+		if (fields[fieldIndex].fields) {
+			if (fields[fieldIndex].fields === "all") {
+				fields_to_check = first_data.fields;
+			} else {
+				fields_to_check = fields[fieldIndex].fields as string[];
+			}
+		} else {
+			fields_to_check = [first_data.fields[0]];
+		}
+
+		const dataToFinalMap: {
+			dataKey: TransformedDataKey;
+			finalKey: TransformedDataKey;
+		}[] = [];
+
+		for (let f = 0; f < fields_to_check.length; f++) {
+			const originalFieldName = fields_to_check[f];
+			const finalKey: TransformedDataKey = `d_${currentFieldKey}_${originalFieldName}`;
+
+			dataToFinalMap.push({
+				dataKey: `d_${originalFieldName}`,
+				finalKey,
+			});
+			outFields.push({
+				name: currentFieldSpec.useDataName
+					? `${originalFieldName} (${currentField.name})`
+					: currentField.name,
+				key: finalKey,
+			});
+			outAggregation.push(currentFieldSpec.defaultAggregation);
+		}
+
+		fieldInfos.push({
+			key: currentFieldKey,
+			field_id: currentField.field_id,
+			settings: currentField.settings,
+			dataToFinalMap,
+		});
 	}
 
-	const field_data = FIELDS[field.field_id];
-	if (!field_data.canProvideData) {
+	if (fieldInfos.length <= 0) {
 		return undefined;
 	}
 
 	const data: SingleData[] = [];
-	const data_fields: TransformedDataKey[] = [];
 
-	const first_data = field_data.transformData(
-		entries[0].fields[fieldKey],
-		field.settings,
-	);
-	let fields_to_check: string[];
-	if (oFields) {
-		if (oFields === "all") {
-			fields_to_check = first_data.fields;
-		} else {
-			fields_to_check = oFields;
-		}
-	} else {
-		fields_to_check = [first_data.fields[0]];
-	}
-
-	for (let f = 0; f < fields_to_check.length; f++) {
-		data_fields.push(`d_${fields_to_check[f]}`);
-	}
-
-	for (let e = 0; e < entries.length; e++) {
-		const obj: SingleData = {
-			date: entries[e].created_for.getTime(),
+	for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
+		const entryData: SingleData = {
+			date: entries[entryIndex].created_for.getTime(),
 		};
 
-		const tData = field_data.transformData(
-			entries[e].fields[fieldKey],
-			field.settings,
-		);
+		for (let infoIndex = 0; infoIndex < fieldInfos.length; infoIndex++) {
+			const tData = (
+				FIELDS[fieldInfos[infoIndex].field_id] as FieldWithData
+			).transformData(
+				entries[entryIndex].fields[fieldInfos[infoIndex].key],
+				fieldInfos[infoIndex].settings,
+			);
 
-		for (let f = 0; f < fields_to_check.length; f++) {
-			const dataKey = data_fields[f];
-			obj[dataKey] = tData[dataKey];
+			const dataToFinalMap = fieldInfos[infoIndex].dataToFinalMap;
+
+			for (
+				let mapIndex = 0;
+				mapIndex < dataToFinalMap.length;
+				mapIndex++
+			) {
+				const dataKey = dataToFinalMap[mapIndex].dataKey;
+				const finalKey = dataToFinalMap[mapIndex].finalKey;
+				entryData[finalKey] = tData[dataKey];
+			}
 		}
 
-		data.push(obj);
+		data.push(entryData);
 	}
 
 	return {
 		data,
-		fields: data_fields,
-		aggregationType: field_data.defaultAggregation,
+		fields: outFields,
+		aggregationTypes: outAggregation,
 	};
 }
 
 function groupData(
 	data: SingleData[],
-	fields: TransformedDataKey[],
-	oGrouping: Exclude<SimpleDataOptions["grouping"], undefined | "none">,
-	aggregationType: "average" | "addition",
+	fields: TransformedField[],
+	oGrouping: Exclude<DataOptions["grouping"], undefined | "none">,
+	aggregationTypes: ("average" | "addition")[],
 	start: Date,
 	end?: Date,
 ) {
-	let current = start;
-	const finish = end ?? new Date();
+	let currentDate = start;
+	const endDate = end ?? new Date();
 
-	const newData: SingleData[] = [];
-	let currentIndex = 0;
+	const groupedData: SingleData[] = [];
+	let currentDataIndex = 0;
 
-	while (current < finish) {
-		const obj: SingleData = {
-			date: current.getTime(),
+	while (currentDate < endDate) {
+		const currentGroupedData: SingleData = {
+			date: currentDate.getTime(),
 		};
-		const next = add(current, { [oGrouping]: 1 });
+		const nextDate = add(currentDate, { [oGrouping]: 1 });
 
-		const int = interval(current, next);
-		let count = 0;
+		const currentInterval = interval(currentDate, nextDate);
+		let entryCount = 0;
 
-		while (currentIndex < data.length) {
-			const date = new Date(data[currentIndex].date);
-			if (isWithinInterval(date, int)) {
-				for (let f = 0; f < fields.length; f++) {
-					const field = fields[f];
-					obj[field] = (obj[field] ?? 0) + data[currentIndex][field];
+		while (currentDataIndex < data.length) {
+			const entryDate = new Date(data[currentDataIndex].date);
+
+			if (isWithinInterval(entryDate, currentInterval)) {
+				for (
+					let fieldIndex = 0;
+					fieldIndex < fields.length;
+					fieldIndex++
+				) {
+					const currentFieldKey = fields[fieldIndex].key;
+					currentGroupedData[currentFieldKey] =
+						(currentGroupedData[currentFieldKey] ?? 0) +
+						data[currentDataIndex][currentFieldKey];
 				}
 
-				currentIndex += 1;
-				count += 1;
+				currentDataIndex += 1;
+				entryCount += 1;
 			} else {
 				break;
 			}
 		}
 
-		if (aggregationType === "average") {
-			for (let f = 0; f < fields.length; f++) {
-				const field = fields[f];
-				if (obj[field]) {
-					obj[field] = obj[field] / count;
+		for (let fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
+			if (aggregationTypes[fieldIndex] === "average") {
+				const currentFieldKey = fields[fieldIndex].key;
+				if (currentGroupedData[currentFieldKey]) {
+					currentGroupedData[currentFieldKey] =
+						currentGroupedData[currentFieldKey] / entryCount;
 				}
 			}
 		}
 
-		newData.push(obj);
-		current = next;
+		groupedData.push(currentGroupedData);
+		currentDate = nextDate;
 	}
 
-	return newData;
+	return groupedData;
 }
 
-export function useSimpleData(
+export function useData(
 	thingId: number,
-	fieldKey: string,
-	options: SimpleDataOptions = {},
+	graphs: FieldOptions[],
+	options: DataOptions = {},
 ) {
 	const [startDate, endDate] = useMemo(() => {
 		if (!options.periodKind) {
@@ -216,7 +270,7 @@ export function useSimpleData(
 			return undefined;
 		}
 
-		const data = transformData(thing, entries, fieldKey, options.fields);
+		const data = transformData(thing, entries, graphs);
 
 		if (!data) {
 			return undefined;
@@ -227,22 +281,14 @@ export function useSimpleData(
 				data.data,
 				data.fields,
 				options.grouping,
-				data.aggregationType,
+				data.aggregationTypes,
 				startDate,
 				endDate,
 			);
 		}
 
 		return data;
-	}, [
-		thing,
-		entries,
-		fieldKey,
-		options.fields,
-		options.grouping,
-		startDate,
-		endDate,
-	]);
+	}, [thing, entries, graphs, options.grouping, startDate, endDate]);
 
 	return {
 		data: transformedData,

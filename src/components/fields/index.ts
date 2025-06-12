@@ -35,7 +35,7 @@ export interface TransformedData {
 	fields: string[];
 }
 
-export type Field<T, U> = {
+export type Field<T = unknown, U = unknown> = {
 	// Field info
 	id: string;
 	friendlyName: () => string;
@@ -58,13 +58,18 @@ export type Field<T, U> = {
 
 			// helpers/providers
 			transformData: (data: U, settings: T) => TransformedData;
+			useDataName: boolean;
 	  }
 	| { canProvideData?: false }
 );
+
+export type FieldWithData<T = unknown, U = unknown> = Field<T, U> & {
+	canProvideData: true;
+};
 
 export const FIELDS = {
 	[dateField.id]: dateField,
 	[textField.id]: textField,
 	[rangeField.id]: rangeField,
 	[tagsField.id]: tagsField,
-} as { [key: string]: Field<unknown, unknown> };
+} as { [key: string]: Field };

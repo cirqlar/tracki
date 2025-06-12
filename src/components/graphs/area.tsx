@@ -1,6 +1,6 @@
 import {
 	Area,
-	AreaChart,
+	AreaChart as RechartsAreaChart,
 	Legend,
 	ResponsiveContainer,
 	XAxis,
@@ -8,12 +8,12 @@ import {
 } from "recharts";
 import { format } from "date-fns";
 
-import { GRAPH_COLOURS, SimpleDataOptions, useSimpleData } from "./util";
+import { DataOptions, FieldOptions, GRAPH_COLOURS, useData } from "./util";
 
 interface SingleAreaProps {
 	thingId: number;
-	fieldKey: string;
-	options?: SimpleDataOptions;
+	fields: FieldOptions[];
+	options?: DataOptions;
 	disambigKey: string;
 	stack?: boolean;
 }
@@ -27,12 +27,12 @@ function Gradient({ color, id }: { color: string; id: string }) {
 	);
 }
 
-export default function SimpleArea(props: SingleAreaProps) {
+export default function AreaChart(props: SingleAreaProps) {
 	const {
 		data: transformedData,
 		startDate,
 		endDate,
-	} = useSimpleData(props.thingId, props.fieldKey, props.options);
+	} = useData(props.thingId, props.fields, props.options);
 
 	if (!transformedData) {
 		return (
@@ -44,12 +44,12 @@ export default function SimpleArea(props: SingleAreaProps) {
 
 	return (
 		<ResponsiveContainer width="100%">
-			<AreaChart data={transformedData.data}>
+			<RechartsAreaChart data={transformedData.data}>
 				<defs>
-					{transformedData.fields.map((k, i) => (
+					{transformedData.fields.map((field, i) => (
 						<Gradient
-							key={k}
-							color={GRAPH_COLOURS[i]}
+							key={field.key}
+							color={GRAPH_COLOURS[i % GRAPH_COLOURS.length]}
 							id={`${props.disambigKey}_${i}`}
 						/>
 					))}
@@ -71,18 +71,19 @@ export default function SimpleArea(props: SingleAreaProps) {
 					stroke="white"
 					width={20}
 				/>
-				{transformedData.fields.map((k, i) => (
+				{transformedData.fields.map((field, i) => (
 					<Area
 						type="monotone"
-						key={k}
-						dataKey={k}
+						key={field.key}
+						dataKey={field.key}
+						name={field.name}
 						stackId={props.stack ? 1 : undefined}
-						stroke={GRAPH_COLOURS[i]}
+						stroke={GRAPH_COLOURS[i % GRAPH_COLOURS.length]}
 						fill={`url(#${props.disambigKey}_${i})`}
 					/>
 				))}
 				{transformedData.fields.length > 1 && <Legend />}
-			</AreaChart>
+			</RechartsAreaChart>
 		</ResponsiveContainer>
 	);
 }
