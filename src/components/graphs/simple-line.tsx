@@ -8,20 +8,20 @@ import {
 	YAxis,
 } from "recharts";
 
-import { GRAPH_COLOURS, useSimpleData } from "./util";
+import { GRAPH_COLOURS, SimpleDataOptions, useSimpleData } from "./util";
 
 interface SingleLineProps {
 	thingId: number;
 	fieldKey: string;
-	fields?: string[] | "all";
+	options?: SimpleDataOptions;
 }
 
 export default function SimpleLine(props: SingleLineProps) {
-	const transformedData = useSimpleData(
-		props.thingId,
-		props.fieldKey,
-		props.fields,
-	);
+	const {
+		data: transformedData,
+		startDate,
+		endDate,
+	} = useSimpleData(props.thingId, props.fieldKey, props.options);
 
 	if (!transformedData) {
 		return (
@@ -37,7 +37,10 @@ export default function SimpleLine(props: SingleLineProps) {
 				<XAxis
 					dataKey="date"
 					type="number"
-					domain={["dataMin", "dataMax"]}
+					domain={[
+						startDate.getTime(),
+						endDate ? endDate.getTime() : "dataMax",
+					]}
 					interval="preserveStartEnd"
 					tickFormatter={(d) => format(new Date(d), "dd/MM/yy-HH:mm")}
 					stroke="white"

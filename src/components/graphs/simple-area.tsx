@@ -8,12 +8,12 @@ import {
 } from "recharts";
 import { format } from "date-fns";
 
-import { GRAPH_COLOURS, useSimpleData } from "./util";
+import { GRAPH_COLOURS, SimpleDataOptions, useSimpleData } from "./util";
 
 interface SingleAreaProps {
 	thingId: number;
 	fieldKey: string;
-	fields?: string[] | "all";
+	options?: SimpleDataOptions;
 	disambigKey: string;
 	stack?: boolean;
 }
@@ -28,11 +28,11 @@ function Gradient({ color, id }: { color: string; id: string }) {
 }
 
 export default function SimpleArea(props: SingleAreaProps) {
-	const transformedData = useSimpleData(
-		props.thingId,
-		props.fieldKey,
-		props.fields,
-	);
+	const {
+		data: transformedData,
+		startDate,
+		endDate,
+	} = useSimpleData(props.thingId, props.fieldKey, props.options);
 
 	if (!transformedData) {
 		return (
@@ -46,9 +46,9 @@ export default function SimpleArea(props: SingleAreaProps) {
 		<ResponsiveContainer width="100%">
 			<AreaChart data={transformedData.data}>
 				<defs>
-					{transformedData.fields.map((_, i) => (
+					{transformedData.fields.map((k, i) => (
 						<Gradient
-							key={i}
+							key={k}
 							color={GRAPH_COLOURS[i]}
 							id={`${props.disambigKey}_${i}`}
 						/>
@@ -58,7 +58,10 @@ export default function SimpleArea(props: SingleAreaProps) {
 				<XAxis
 					dataKey="date"
 					type="number"
-					domain={["dataMin", "dataMax"]}
+					domain={[
+						startDate.getTime(),
+						endDate ? endDate.getTime() : "dataMax",
+					]}
 					interval="preserveStartEnd"
 					tickFormatter={(d) => format(new Date(d), "dd/MM/yy-HH:mm")}
 					stroke="white"

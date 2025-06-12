@@ -41,7 +41,7 @@ const db = new Dexie("TrackiDatabase") as Dexie & {
 // Schema declaration:
 db.version(1).stores({
 	things: "++id, &name, created_at, last_modified_at",
-	entries: "++id, thing_id, created_for, created_at, last_modified_at",
+	entries: "++id, [thing_id+created_for], created_at, last_modified_at",
 });
 
 export type { Thing, Entry, ThingField };
