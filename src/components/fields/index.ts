@@ -55,10 +55,11 @@ export type Field<T = unknown, U = unknown> = {
 	| {
 			canProvideData: true;
 			defaultAggregation: "average" | "addition";
+			useDataName: boolean;
 
 			// helpers/providers
 			transformData: (data: U, settings: T) => TransformedData;
-			useDataName: boolean;
+			getMaxValue: (settings: T) => number | undefined;
 	  }
 	| { canProvideData?: false }
 );
