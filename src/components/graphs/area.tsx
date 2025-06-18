@@ -3,12 +3,11 @@ import {
 	AreaChart as RechartsAreaChart,
 	Legend,
 	ResponsiveContainer,
-	XAxis,
-	YAxis,
+	CartesianGrid,
 } from "recharts";
-import { format } from "date-fns";
 
 import { DataOptions, FieldOptions, GRAPH_COLOURS, useData } from "./util";
+import { defaultAxes } from "./shared";
 
 interface SingleAreaProps {
 	thingId: number;
@@ -30,6 +29,7 @@ function Gradient({ color, id }: { color: string; id: string }) {
 export default function AreaChart(props: SingleAreaProps) {
 	const {
 		data: transformedData,
+		maxValue,
 		startDate,
 		endDate,
 	} = useData(props.thingId, props.fields, props.options);
@@ -43,7 +43,7 @@ export default function AreaChart(props: SingleAreaProps) {
 	}
 
 	return (
-		<ResponsiveContainer width="100%">
+		<ResponsiveContainer width="100%" aspect={1}>
 			<RechartsAreaChart data={transformedData.data}>
 				<defs>
 					{transformedData.fields.map((field, i) => (
@@ -55,22 +55,16 @@ export default function AreaChart(props: SingleAreaProps) {
 					))}
 				</defs>
 
-				<XAxis
-					dataKey="date"
-					type="number"
-					domain={[
-						startDate.getTime(),
-						endDate ? endDate.getTime() : "dataMax",
-					]}
-					interval="preserveStartEnd"
-					tickFormatter={(d) => format(new Date(d), "dd/MM/yy-HH:mm")}
-					stroke="white"
-				/>
-				<YAxis
-					domain={["dataMin", "dataMax"]}
-					stroke="white"
-					width={20}
-				/>
+				{defaultAxes({
+					startDate,
+					endDate,
+					padLeft: true,
+					maxValue,
+					grouping: props.options?.grouping,
+				})}
+
+				<CartesianGrid vertical={false} />
+
 				{transformedData.fields.map((field, i) => (
 					<Area
 						type="monotone"

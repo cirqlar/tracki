@@ -18,15 +18,20 @@ export const GRAPH_COLOURS = [
 	"violet",
 ];
 
+type ExtentsKey = `exts_${string}`;
+
 interface SingleData {
 	date: number;
 	[key: TransformedDataKey]: number;
+	[key: ExtentsKey]: number[];
 }
+
 export interface DataOptions {
 	periodCount?: number;
 	periodKind?: "hours" | "days" | "weeks" | "months";
 	grouping?: "none" | "hours" | "days" | "weeks";
 	start?: Date;
+	errorBars?: boolean;
 }
 
 export interface FieldOptions {
@@ -44,6 +49,8 @@ function transformData(thing: Thing, entries: Entry[], fields: FieldOptions[]) {
 	const outFields: TransformedField[] = [];
 	const outAggregation: ("average" | "addition")[] = [];
 
+	let maxValue = Number.MIN_VALUE;
+
 	for (let fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
 		const currentFieldKey = fields[fieldIndex].key;
 		const currentField = thing.fields.find((v) => v.key == currentFieldKey);
@@ -57,6 +64,13 @@ function transformData(thing: Thing, entries: Entry[], fields: FieldOptions[]) {
 			entries[0].fields[currentFieldKey],
 			currentField.settings,
 		);
+
+		maxValue = Math.max(
+			maxValue,
+			currentFieldSpec.getMaxValue(currentField.settings) ??
+				Number.MIN_VALUE,
+		);
+
 		let fields_to_check: string[];
 		if (fields[fieldIndex].fields) {
 			if (fields[fieldIndex].fields === "all") {
@@ -136,6 +150,7 @@ function transformData(thing: Thing, entries: Entry[], fields: FieldOptions[]) {
 	return {
 		data,
 		fields: outFields,
+		maxValue,
 		aggregationTypes: outAggregation,
 	};
 }
@@ -145,14 +160,16 @@ function groupData(
 	fields: TransformedField[],
 	oGrouping: Exclude<DataOptions["grouping"], undefined | "none">,
 	aggregationTypes: ("average" | "addition")[],
-	start: Date,
-	end?: Date,
+	startDate: Date,
+	endDate: Date,
+	errorBars: boolean,
 ) {
-	let currentDate = start;
-	const endDate = end ?? new Date();
+	let currentDate = startDate;
 
 	const groupedData: SingleData[] = [];
 	let currentDataIndex = 0;
+
+	let maxValue = Number.MIN_VALUE;
 
 	while (currentDate < endDate) {
 		const currentGroupedData: SingleData = {
@@ -162,6 +179,8 @@ function groupData(
 
 		const currentInterval = interval(currentDate, nextDate);
 		let entryCount = 0;
+		const mins = Array(fields.length).fill(Number.MAX_VALUE);
+		const maxs = Array(fields.length).fill(Number.MIN_VALUE);
 
 		while (currentDataIndex < data.length) {
 			const entryDate = new Date(data[currentDataIndex].date);
@@ -173,9 +192,21 @@ function groupData(
 					fieldIndex++
 				) {
 					const currentFieldKey = fields[fieldIndex].key;
+					const currentData = data[currentDataIndex][currentFieldKey];
 					currentGroupedData[currentFieldKey] =
 						(currentGroupedData[currentFieldKey] ?? 0) +
-						data[currentDataIndex][currentFieldKey];
+						currentData;
+
+					if (errorBars) {
+						mins[fieldIndex] = Math.min(
+							mins[fieldIndex],
+							currentData,
+						);
+						maxs[fieldIndex] = Math.max(
+							maxs[fieldIndex],
+							currentData,
+						);
+					}
 				}
 
 				currentDataIndex += 1;
@@ -186,11 +217,24 @@ function groupData(
 		}
 
 		for (let fieldIndex = 0; fieldIndex < fields.length; fieldIndex++) {
-			if (aggregationTypes[fieldIndex] === "average") {
-				const currentFieldKey = fields[fieldIndex].key;
-				if (currentGroupedData[currentFieldKey]) {
+			const currentFieldKey = fields[fieldIndex].key;
+			if (currentGroupedData[currentFieldKey]) {
+				if (aggregationTypes[fieldIndex] === "average") {
 					currentGroupedData[currentFieldKey] =
 						currentGroupedData[currentFieldKey] / entryCount;
+				}
+
+				if (errorBars) {
+					currentGroupedData[`exts_${currentFieldKey}`] = [
+						mins[fieldIndex],
+						maxs[fieldIndex],
+					];
+					maxValue = Math.max(maxValue, maxs[fieldIndex]);
+				} else {
+					maxValue = Math.max(
+						maxValue,
+						currentGroupedData[currentFieldKey],
+					);
 				}
 			}
 		}
@@ -199,7 +243,7 @@ function groupData(
 		currentDate = nextDate;
 	}
 
-	return groupedData;
+	return { groupedData, maxValue };
 }
 
 export function useData(
@@ -217,7 +261,7 @@ export function useData(
 					seconds: 0,
 					milliseconds: 0,
 				});
-			return [s, undefined];
+			return [s, new Date()];
 		} else if (options.start) {
 			const e = add(options.start, {
 				[options.periodKind]: options.periodCount ?? 1,
@@ -233,7 +277,7 @@ export function useData(
 					milliseconds: 0,
 				},
 			);
-			return [s, undefined];
+			return [s, new Date()];
 		}
 	}, [options.periodCount, options.periodKind, options.start]);
 
@@ -277,23 +321,39 @@ export function useData(
 		}
 
 		if (options.grouping && options.grouping !== "none") {
-			data.data = groupData(
+			const gData = groupData(
 				data.data,
 				data.fields,
 				options.grouping,
 				data.aggregationTypes,
 				startDate,
 				endDate,
+				options.errorBars ?? false,
 			);
+
+			data.data = gData.groupedData;
+			data.maxValue = gData.maxValue;
 		}
 
-		return data;
-	}, [thing, entries, graphs, options.grouping, startDate, endDate]);
-
-	return {
-		data: transformedData,
+		return {
+			data,
+			maxValue: data.maxValue,
+		};
+	}, [
+		thing,
+		entries,
+		graphs,
+		options.grouping,
+		options.errorBars,
 		startDate,
 		endDate,
+	]);
+
+	return {
+		data: transformedData?.data,
+		startDate,
+		endDate,
+		maxValue: Math.max(transformedData?.maxValue ?? 0, 0),
 		isPending: thingIsPending || entriesIsPending,
 		isFetching: thingIsFetching || entriesIsFetching,
 		isSuccess: thingIsSuccess || entriesIsSuccess,

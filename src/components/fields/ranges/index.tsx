@@ -358,6 +358,8 @@ const rangeField: RangeField = {
 			d_range: data.value,
 		};
 	},
+	getMaxValue: (settings) =>
+		settings.type === "number" ? settings.end : settings.options.length,
 	defaultAggregation: "average",
 	getDefaultFieldSettings: () => ({
 		type: "number",

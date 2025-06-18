@@ -1,14 +1,13 @@
-import { format } from "date-fns";
 import {
+	CartesianGrid,
 	Legend,
 	Line,
 	LineChart as RechartsLineChart,
 	ResponsiveContainer,
-	XAxis,
-	YAxis,
 } from "recharts";
 
 import { DataOptions, FieldOptions, GRAPH_COLOURS, useData } from "./util";
+import { defaultAxes } from "./shared";
 
 interface LineChartProps {
 	thingId: number;
@@ -19,6 +18,7 @@ interface LineChartProps {
 export default function LineChart(props: LineChartProps) {
 	const {
 		data: transformedData,
+		maxValue,
 		startDate,
 		endDate,
 	} = useData(props.thingId, props.fields, props.options);
@@ -32,24 +32,17 @@ export default function LineChart(props: LineChartProps) {
 	}
 
 	return (
-		<ResponsiveContainer width="100%">
+		<ResponsiveContainer width="100%" aspect={1}>
 			<RechartsLineChart data={transformedData.data}>
-				<XAxis
-					dataKey="date"
-					type="number"
-					domain={[
-						startDate.getTime(),
-						endDate ? endDate.getTime() : "dataMax",
-					]}
-					interval="preserveStartEnd"
-					tickFormatter={(d) => format(new Date(d), "dd/MM/yy-HH:mm")}
-					stroke="white"
-				/>
-				<YAxis
-					domain={["dataMin", "dataMax"]}
-					stroke="white"
-					width={20}
-				/>
+				{defaultAxes({
+					startDate,
+					endDate,
+					padLeft: true,
+					maxValue,
+					grouping: props.options?.grouping,
+				})}
+
+				<CartesianGrid vertical={false} />
 				{transformedData.fields.map((k, i) => (
 					<Line
 						type="monotone"

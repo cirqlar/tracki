@@ -171,6 +171,7 @@ const tagsField: TagsField = {
 
 		return obj;
 	},
+	getMaxValue: () => 1,
 	defaultAggregation: "addition",
 	getDefaultFieldSettings: () => ({ tags: [], selectMultiple: false }),
 	getDefaultEntry: () => ({ selected: [] }),
