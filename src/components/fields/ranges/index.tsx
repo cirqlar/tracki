@@ -1,10 +1,5 @@
 import type { Field } from "@/components/fields";
-import {
-	useEffect,
-	useState,
-	experimental_useEffectEvent as useEffectEvent,
-	useRef,
-} from "react";
+import { useEffect, useState, useEffectEvent, useRef } from "react";
 import { MdClose, MdLinearScale } from "react-icons/md";
 
 export type RangeSettings =

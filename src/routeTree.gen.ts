@@ -8,85 +8,128 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as indexIndexRouteImport } from './routes/(index)/_index'
+import { Route as AppAboutRouteImport } from './routes/app_.about'
+import { Route as AppAppRouteImport } from './routes/_app/app'
+import { Route as indexIndexIndexRouteImport } from './routes/(index)/_index.index'
+import { Route as AppAppNewRouteImport } from './routes/_app/app_/new'
+import { Route as AppAppThingIdRouteImport } from './routes/_app/app_/$thingId'
+import { Route as AppAppThingIdNewRouteImport } from './routes/_app/app_/$thingId_.new'
+import { Route as indexIndexAppBeginRouteImport } from './routes/(index)/_index.app.begin'
 
-// Import Routes
-
-import { Route as rootRoute } from './routes/__root'
-import { Route as AppRouteImport } from './routes/_app/route'
-import { Route as indexIndexImport } from './routes/(index)/_index'
-import { Route as AppAboutImport } from './routes/app_.about'
-import { Route as AppAppImport } from './routes/_app/app'
-import { Route as indexIndexIndexImport } from './routes/(index)/_index.index'
-import { Route as AppAppNewImport } from './routes/_app/app_/new'
-import { Route as AppAppThingIdImport } from './routes/_app/app_/$thingId'
-import { Route as AppAppThingIdNewImport } from './routes/_app/app_/$thingId_.new'
-import { Route as indexIndexAppBeginImport } from './routes/(index)/_index.app.begin'
-
-// Create Virtual Routes
-
-const indexImport = createFileRoute('/(index)')()
-
-// Create/Update Routes
-
-const indexRoute = indexImport.update({
-  id: '/(index)',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AppRouteRoute = AppRouteImport.update({
+const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const indexIndexRoute = indexIndexImport.update({
-  id: '/_index',
-  getParentRoute: () => indexRoute,
+const indexIndexRoute = indexIndexRouteImport.update({
+  id: '/(index)/_index',
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AppAboutRoute = AppAboutImport.update({
+const AppAboutRoute = AppAboutRouteImport.update({
   id: '/app_/about',
   path: '/app/about',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AppAppRoute = AppAppImport.update({
+const AppAppRoute = AppAppRouteImport.update({
   id: '/app',
   path: '/app',
   getParentRoute: () => AppRouteRoute,
 } as any)
-
-const indexIndexIndexRoute = indexIndexIndexImport.update({
+const indexIndexIndexRoute = indexIndexIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => indexIndexRoute,
 } as any)
-
-const AppAppNewRoute = AppAppNewImport.update({
+const AppAppNewRoute = AppAppNewRouteImport.update({
   id: '/app_/new',
   path: '/app/new',
   getParentRoute: () => AppRouteRoute,
 } as any)
-
-const AppAppThingIdRoute = AppAppThingIdImport.update({
+const AppAppThingIdRoute = AppAppThingIdRouteImport.update({
   id: '/app_/$thingId',
   path: '/app/$thingId',
   getParentRoute: () => AppRouteRoute,
 } as any)
-
-const AppAppThingIdNewRoute = AppAppThingIdNewImport.update({
+const AppAppThingIdNewRoute = AppAppThingIdNewRouteImport.update({
   id: '/app_/$thingId_/new',
   path: '/app/$thingId/new',
   getParentRoute: () => AppRouteRoute,
 } as any)
-
-const indexIndexAppBeginRoute = indexIndexAppBeginImport.update({
+const indexIndexAppBeginRoute = indexIndexAppBeginRouteImport.update({
   id: '/app/begin',
   path: '/app/begin',
   getParentRoute: () => indexIndexRoute,
 } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/app': typeof AppAppRoute
+  '/app/about': typeof AppAboutRoute
+  '/app/$thingId': typeof AppAppThingIdRoute
+  '/app/new': typeof AppAppNewRoute
+  '/': typeof indexIndexIndexRoute
+  '/app/begin': typeof indexIndexAppBeginRoute
+  '/app/$thingId/new': typeof AppAppThingIdNewRoute
+}
+export interface FileRoutesByTo {
+  '/app': typeof AppAppRoute
+  '/app/about': typeof AppAboutRoute
+  '/app/$thingId': typeof AppAppThingIdRoute
+  '/app/new': typeof AppAppNewRoute
+  '/': typeof indexIndexIndexRoute
+  '/app/begin': typeof indexIndexAppBeginRoute
+  '/app/$thingId/new': typeof AppAppThingIdNewRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/_app': typeof AppRouteRouteWithChildren
+  '/(index)/_index': typeof indexIndexRouteWithChildren
+  '/_app/app': typeof AppAppRoute
+  '/app_/about': typeof AppAboutRoute
+  '/_app/app_/$thingId': typeof AppAppThingIdRoute
+  '/_app/app_/new': typeof AppAppNewRoute
+  '/(index)/_index/': typeof indexIndexIndexRoute
+  '/(index)/_index/app/begin': typeof indexIndexAppBeginRoute
+  '/_app/app_/$thingId_/new': typeof AppAppThingIdNewRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/app'
+    | '/app/about'
+    | '/app/$thingId'
+    | '/app/new'
+    | '/'
+    | '/app/begin'
+    | '/app/$thingId/new'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/app'
+    | '/app/about'
+    | '/app/$thingId'
+    | '/app/new'
+    | '/'
+    | '/app/begin'
+    | '/app/$thingId/new'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/(index)/_index'
+    | '/_app/app'
+    | '/app_/about'
+    | '/_app/app_/$thingId'
+    | '/_app/app_/new'
+    | '/(index)/_index/'
+    | '/(index)/_index/app/begin'
+    | '/_app/app_/$thingId_/new'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  indexIndexRoute: typeof indexIndexRouteWithChildren
+  AppAboutRoute: typeof AppAboutRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -94,76 +137,67 @@ declare module '@tanstack/react-router' {
       id: '/_app'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AppRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/(index)': {
-      id: '/(index)'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof indexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(index)/_index': {
       id: '/(index)/_index'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof indexIndexImport
-      parentRoute: typeof indexRoute
-    }
-    '/_app/app': {
-      id: '/_app/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppAppImport
-      parentRoute: typeof AppRouteImport
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof indexIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/app_/about': {
       id: '/app_/about'
       path: '/app/about'
       fullPath: '/app/about'
-      preLoaderRoute: typeof AppAboutImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AppAboutRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/app_/$thingId': {
-      id: '/_app/app_/$thingId'
-      path: '/app/$thingId'
-      fullPath: '/app/$thingId'
-      preLoaderRoute: typeof AppAppThingIdImport
-      parentRoute: typeof AppRouteImport
-    }
-    '/_app/app_/new': {
-      id: '/_app/app_/new'
-      path: '/app/new'
-      fullPath: '/app/new'
-      preLoaderRoute: typeof AppAppNewImport
-      parentRoute: typeof AppRouteImport
+    '/_app/app': {
+      id: '/_app/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppAppRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/(index)/_index/': {
       id: '/(index)/_index/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof indexIndexIndexImport
-      parentRoute: typeof indexIndexImport
+      preLoaderRoute: typeof indexIndexIndexRouteImport
+      parentRoute: typeof indexIndexRoute
     }
-    '/(index)/_index/app/begin': {
-      id: '/(index)/_index/app/begin'
-      path: '/app/begin'
-      fullPath: '/app/begin'
-      preLoaderRoute: typeof indexIndexAppBeginImport
-      parentRoute: typeof indexIndexImport
+    '/_app/app_/new': {
+      id: '/_app/app_/new'
+      path: '/app/new'
+      fullPath: '/app/new'
+      preLoaderRoute: typeof AppAppNewRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/app_/$thingId': {
+      id: '/_app/app_/$thingId'
+      path: '/app/$thingId'
+      fullPath: '/app/$thingId'
+      preLoaderRoute: typeof AppAppThingIdRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/_app/app_/$thingId_/new': {
       id: '/_app/app_/$thingId_/new'
       path: '/app/$thingId/new'
       fullPath: '/app/$thingId/new'
-      preLoaderRoute: typeof AppAppThingIdNewImport
-      parentRoute: typeof AppRouteImport
+      preLoaderRoute: typeof AppAppThingIdNewRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/(index)/_index/app/begin': {
+      id: '/(index)/_index/app/begin'
+      path: '/app/begin'
+      fullPath: '/app/begin'
+      preLoaderRoute: typeof indexIndexAppBeginRouteImport
+      parentRoute: typeof indexIndexRoute
     }
   }
 }
-
-// Create and export the route tree
 
 interface AppRouteRouteChildren {
   AppAppRoute: typeof AppAppRoute
@@ -197,165 +231,11 @@ const indexIndexRouteWithChildren = indexIndexRoute._addFileChildren(
   indexIndexRouteChildren,
 )
 
-interface indexRouteChildren {
-  indexIndexRoute: typeof indexIndexRouteWithChildren
-}
-
-const indexRouteChildren: indexRouteChildren = {
-  indexIndexRoute: indexIndexRouteWithChildren,
-}
-
-const indexRouteWithChildren = indexRoute._addFileChildren(indexRouteChildren)
-
-export interface FileRoutesByFullPath {
-  '': typeof AppRouteRouteWithChildren
-  '/': typeof indexIndexIndexRoute
-  '/app': typeof AppAppRoute
-  '/app/about': typeof AppAboutRoute
-  '/app/$thingId': typeof AppAppThingIdRoute
-  '/app/new': typeof AppAppNewRoute
-  '/app/begin': typeof indexIndexAppBeginRoute
-  '/app/$thingId/new': typeof AppAppThingIdNewRoute
-}
-
-export interface FileRoutesByTo {
-  '': typeof AppRouteRouteWithChildren
-  '/app': typeof AppAppRoute
-  '/app/about': typeof AppAboutRoute
-  '/app/$thingId': typeof AppAppThingIdRoute
-  '/app/new': typeof AppAppNewRoute
-  '/': typeof indexIndexIndexRoute
-  '/app/begin': typeof indexIndexAppBeginRoute
-  '/app/$thingId/new': typeof AppAppThingIdNewRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/_app': typeof AppRouteRouteWithChildren
-  '/(index)': typeof indexRouteWithChildren
-  '/(index)/_index': typeof indexIndexRouteWithChildren
-  '/_app/app': typeof AppAppRoute
-  '/app_/about': typeof AppAboutRoute
-  '/_app/app_/$thingId': typeof AppAppThingIdRoute
-  '/_app/app_/new': typeof AppAppNewRoute
-  '/(index)/_index/': typeof indexIndexIndexRoute
-  '/(index)/_index/app/begin': typeof indexIndexAppBeginRoute
-  '/_app/app_/$thingId_/new': typeof AppAppThingIdNewRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | ''
-    | '/'
-    | '/app'
-    | '/app/about'
-    | '/app/$thingId'
-    | '/app/new'
-    | '/app/begin'
-    | '/app/$thingId/new'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | ''
-    | '/app'
-    | '/app/about'
-    | '/app/$thingId'
-    | '/app/new'
-    | '/'
-    | '/app/begin'
-    | '/app/$thingId/new'
-  id:
-    | '__root__'
-    | '/_app'
-    | '/(index)'
-    | '/(index)/_index'
-    | '/_app/app'
-    | '/app_/about'
-    | '/_app/app_/$thingId'
-    | '/_app/app_/new'
-    | '/(index)/_index/'
-    | '/(index)/_index/app/begin'
-    | '/_app/app_/$thingId_/new'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  AppRouteRoute: typeof AppRouteRouteWithChildren
-  indexRoute: typeof indexRouteWithChildren
-  AppAboutRoute: typeof AppAboutRoute
-}
-
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
-  indexRoute: indexRouteWithChildren,
+  indexIndexRoute: indexIndexRouteWithChildren,
   AppAboutRoute: AppAboutRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/_app",
-        "/(index)",
-        "/app_/about"
-      ]
-    },
-    "/_app": {
-      "filePath": "_app/route.tsx",
-      "children": [
-        "/_app/app",
-        "/_app/app_/$thingId",
-        "/_app/app_/new",
-        "/_app/app_/$thingId_/new"
-      ]
-    },
-    "/(index)": {
-      "filePath": "(index)",
-      "children": [
-        "/(index)/_index"
-      ]
-    },
-    "/(index)/_index": {
-      "filePath": "(index)/_index.tsx",
-      "parent": "/(index)",
-      "children": [
-        "/(index)/_index/",
-        "/(index)/_index/app/begin"
-      ]
-    },
-    "/_app/app": {
-      "filePath": "_app/app.tsx",
-      "parent": "/_app"
-    },
-    "/app_/about": {
-      "filePath": "app_.about.tsx"
-    },
-    "/_app/app_/$thingId": {
-      "filePath": "_app/app_/$thingId.tsx",
-      "parent": "/_app"
-    },
-    "/_app/app_/new": {
-      "filePath": "_app/app_/new.tsx",
-      "parent": "/_app"
-    },
-    "/(index)/_index/": {
-      "filePath": "(index)/_index.index.tsx",
-      "parent": "/(index)/_index"
-    },
-    "/(index)/_index/app/begin": {
-      "filePath": "(index)/_index.app.begin.tsx",
-      "parent": "/(index)/_index"
-    },
-    "/_app/app_/$thingId_/new": {
-      "filePath": "_app/app_/$thingId_.new.tsx",
-      "parent": "/_app"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

@@ -1,11 +1,6 @@
 import type { Field, TransformedData } from "@/components/fields";
 import Select from "@/components/form/select";
-import {
-	useEffect,
-	useState,
-	experimental_useEffectEvent as useEffectEvent,
-	useRef,
-} from "react";
+import { useEffect, useState, useEffectEvent, useRef } from "react";
 import { MdApps, MdClose } from "react-icons/md";
 
 export interface TagsSettings {

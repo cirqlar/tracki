@@ -1,8 +1,4 @@
-import {
-	useEffect,
-	experimental_useEffectEvent as useEffectEvent,
-	useState,
-} from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 
 import {
 	DayOfTheWeek,

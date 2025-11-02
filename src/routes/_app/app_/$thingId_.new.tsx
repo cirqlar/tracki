@@ -1,5 +1,5 @@
 import {
-	experimental_useEffectEvent as useEffectEvent,
+	useEffectEvent,
 	FormEventHandler,
 	useEffect,
 	useState,
