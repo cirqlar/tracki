@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Rust analyzer makes target folder in top level directory for some reason
+/target/
