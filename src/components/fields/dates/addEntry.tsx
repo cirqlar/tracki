@@ -1,10 +1,7 @@
-import {
-	useState,
-	experimental_useEffectEvent as useEffectEvent,
-	useEffect,
-} from "react";
-import type { DateField } from "./types";
+import { useState, useEffectEvent, useEffect } from "react";
 import { format } from "date-fns";
+
+import type { DateField } from "./types";
 
 const AddEntryComponent: DateField["AddEntryComponent"] = ({
 	defaultFieldData: dfs,

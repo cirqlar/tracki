@@ -1,10 +1,6 @@
-import type { Field } from "@/components/fields";
-import {
-	useEffect,
-	useState,
-	experimental_useEffectEvent as useEffectEvent,
-	useRef,
-} from "react";
+import type { Field, TransformedData } from "@/components/fields";
+import Select from "@/components/form/select";
+import { useEffect, useState, useEffectEvent, useRef } from "react";
 import { MdApps, MdClose } from "react-icons/md";
 
 export interface TagsSettings {
@@ -110,14 +106,73 @@ const AddMenuIcon: TagsField["AddMenuIcon"] = () => {
 	return <MdApps className="h-full w-full" />;
 };
 
+const AddEntryComponent: TagsField["AddEntryComponent"] = ({
+	defaultFieldData: dfd,
+	fieldSettings,
+	disableInteraction,
+	...props
+}) => {
+	const [selected, setSelected] = useState(dfd.selected);
+
+	const updateData = useEffectEvent(props.updateFieldData);
+
+	useEffect(() => {
+		updateData({ selected });
+	}, [selected]);
+
+	return (
+		<div>
+			{fieldSettings.selectMultiple ? (
+				<select
+					defaultValue={selected}
+					className="border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
+					onChange={(e) => console.log(e.target.value)}
+					disabled={disableInteraction}
+					multiple
+				>
+					{fieldSettings.tags.map((t) => (
+						<option key={t} value={t}>
+							{t}
+						</option>
+					))}
+				</select>
+			) : (
+				<Select
+					options={fieldSettings.tags}
+					className="border-2 border-black bg-white px-4 py-2 outline-none focus-visible:border-current dark:bg-black"
+					defaultValue={selected[0]}
+					disabled={disableInteraction}
+					onChange={(e) => setSelected([e.target.value])}
+				/>
+			)}
+		</div>
+	);
+};
+
 const tagsField: TagsField = {
 	id: "fields/tags/0001",
 	friendlyName: () => "Tags",
+	canProvideData: true,
+	useDataName: true,
+	transformData: (data, settings) => {
+		const obj: TransformedData = {
+			fields: settings.tags,
+		};
+
+		for (let i = 0; i < settings.tags.length; i++) {
+			const element = settings.tags[i];
+			obj[`d_${element}`] = data.selected.includes(element) ? 1 : 0;
+		}
+
+		return obj;
+	},
+	getMaxValue: () => 1,
+	defaultAggregation: "addition",
 	getDefaultFieldSettings: () => ({ tags: [], selectMultiple: false }),
 	getDefaultEntry: () => ({ selected: [] }),
 	NewThingComponent,
 	AddMenuIcon,
-	AddEntryComponent: () => null,
+	AddEntryComponent,
 	DisplayEntryComponent: () => null,
 };
 

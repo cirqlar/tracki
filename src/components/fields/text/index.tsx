@@ -1,9 +1,5 @@
 import type { Field } from "@/components/fields";
-import {
-	useEffect,
-	useState,
-	experimental_useEffectEvent as useEffectEvent,
-} from "react";
+import { useEffect, useState, useEffectEvent } from "react";
 import { MdNotes } from "react-icons/md";
 
 export type TextSettings = {

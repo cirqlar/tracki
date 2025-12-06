@@ -1,10 +1,5 @@
 import type { Field } from "@/components/fields";
-import {
-	useEffect,
-	useState,
-	experimental_useEffectEvent as useEffectEvent,
-	useRef,
-} from "react";
+import { useEffect, useState, useEffectEvent, useRef } from "react";
 import { MdClose, MdLinearScale } from "react-icons/md";
 
 export type RangeSettings =
@@ -350,6 +345,17 @@ const AddEntryComponent: RangeField["AddEntryComponent"] = ({
 const rangeField: RangeField = {
 	id: "fields/range/0001",
 	friendlyName: () => "Range",
+	canProvideData: true,
+	useDataName: false,
+	transformData: (data) => {
+		return {
+			fields: ["range"],
+			d_range: data.value,
+		};
+	},
+	getMaxValue: (settings) =>
+		settings.type === "number" ? settings.end : settings.options.length,
+	defaultAggregation: "average",
 	getDefaultFieldSettings: () => ({
 		type: "number",
 		start: 1,
