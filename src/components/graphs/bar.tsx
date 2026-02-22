@@ -36,22 +36,23 @@ export default function BarChart(props: SingleAreaProps) {
 		startDate,
 		endDate,
 	} = useData(props.thingId, props.fields, options);
+	const _data = transformedData?.data;
 
 	const genBg = useMemo(() => {
-		if (!transformedData?.data) return undefined;
+		if (!_data) return undefined;
 
-		const count = Math.ceil(transformedData.data.length / 2);
+		const count = Math.ceil(_data.length / 2);
 		const ellArr = [];
 
 		for (let i = 0; i < count; i++) {
-			const d = transformedData.data[i * 2].date;
+			const d = _data[i * 2].date;
 			const start = sub(d, { hours: 12 }).getTime();
 			const end = add(d, { hours: 12 }).getTime();
 
 			ellArr.push(<ReferenceArea x1={start} x2={end} key={start} />);
 		}
 		return ellArr;
-	}, [transformedData?.data]);
+	}, [_data]);
 
 	if (!transformedData) {
 		return (
