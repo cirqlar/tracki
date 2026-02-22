@@ -11,7 +11,7 @@
     "nt-dev": "cross-env WITHOUT_TAURI=1 PORT=8080 npm run dev",
     "nt-build": "cross-env WITHOUT_TAURI=1 npm run build",
     "check:types": "tsc",
-    "check:lint": "eslint",
+    "check:lint": "oxlint",
     "check": "npm run check:types && npm run check:lint"
   },
   "dependencies": {
@@ -30,7 +30,6 @@
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.19.0",
     "@tanstack/eslint-plugin-query": "^5.66.1",
     "@tanstack/react-query-devtools": "^5.66.0",
     "@tanstack/router-devtools": "^1.97.21",
@@ -42,14 +41,12 @@
     "@vitejs/plugin-react": "^5.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "cross-env": "^10.0.0",
-    "eslint": "^9.19.0",
-    "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^16.2.0",
+    "oxlint": "^1.49.0",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.7.0",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.22.0",
     "vite": "^7.1.0"
   }
 }
