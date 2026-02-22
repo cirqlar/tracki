@@ -10,9 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
-import { Route as indexIndexRouteImport } from './routes/(index)/_index'
 import { Route as AppAboutRouteImport } from './routes/app_.about'
 import { Route as AppAppRouteImport } from './routes/_app/app'
+import { Route as indexIndexRouteImport } from './routes/(index)/_index'
 import { Route as indexIndexIndexRouteImport } from './routes/(index)/_index.index'
 import { Route as AppAppNewRouteImport } from './routes/_app/app_/new'
 import { Route as AppAppThingIdRouteImport } from './routes/_app/app_/$thingId'
@@ -21,10 +21,6 @@ import { Route as indexIndexAppBeginRouteImport } from './routes/(index)/_index.
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const indexIndexRoute = indexIndexRouteImport.update({
-  id: '/(index)/_index',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppAboutRoute = AppAboutRouteImport.update({
@@ -36,6 +32,10 @@ const AppAppRoute = AppAppRouteImport.update({
   id: '/app',
   path: '/app',
   getParentRoute: () => AppRouteRoute,
+} as any)
+const indexIndexRoute = indexIndexRouteImport.update({
+  id: '/(index)/_index',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const indexIndexIndexRoute = indexIndexIndexRouteImport.update({
   id: '/',
@@ -64,20 +64,20 @@ const indexIndexAppBeginRoute = indexIndexAppBeginRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof indexIndexIndexRoute
   '/app': typeof AppAppRoute
   '/app/about': typeof AppAboutRoute
   '/app/$thingId': typeof AppAppThingIdRoute
   '/app/new': typeof AppAppNewRoute
-  '/': typeof indexIndexIndexRoute
   '/app/begin': typeof indexIndexAppBeginRoute
   '/app/$thingId/new': typeof AppAppThingIdNewRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof indexIndexIndexRoute
   '/app': typeof AppAppRoute
   '/app/about': typeof AppAboutRoute
   '/app/$thingId': typeof AppAppThingIdRoute
   '/app/new': typeof AppAppNewRoute
-  '/': typeof indexIndexIndexRoute
   '/app/begin': typeof indexIndexAppBeginRoute
   '/app/$thingId/new': typeof AppAppThingIdNewRoute
 }
@@ -96,20 +96,20 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/app'
     | '/app/about'
     | '/app/$thingId'
     | '/app/new'
-    | '/'
     | '/app/begin'
     | '/app/$thingId/new'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/app'
     | '/app/about'
     | '/app/$thingId'
     | '/app/new'
-    | '/'
     | '/app/begin'
     | '/app/$thingId/new'
   id:
@@ -136,15 +136,8 @@ declare module '@tanstack/react-router' {
     '/_app': {
       id: '/_app'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AppRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(index)/_index': {
-      id: '/(index)/_index'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof indexIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app_/about': {
@@ -160,6 +153,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app'
       preLoaderRoute: typeof AppAppRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/(index)/_index': {
+      id: '/(index)/_index'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof indexIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(index)/_index/': {
       id: '/(index)/_index/'

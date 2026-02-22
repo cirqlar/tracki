@@ -27,7 +27,8 @@
     "react-dom": "^19.2.0",
     "react-icons": "^5.4.0",
     "recharts": "^3.3.0",
-    "tailwindcss": "^4.0.0"
+    "tailwindcss": "^4.0.0",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.66.1",
