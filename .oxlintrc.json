@@ -107,7 +107,7 @@
     // added
     "react-hooks-js/component-hook-factories": "error",
     "react-hooks-js/config": "error",
-    "react-hooks-js/set-state-in-effect": "error",
+    "react-hooks-js/set-state-in-effect": "allow",
     "react-hooks-js/error-boundaries": "error",
     "react-hooks-js/gating": "error",
     "react-hooks-js/globals": "error",
