@@ -119,7 +119,10 @@ export function defaultYAxis(props: YAxisProps) {
 					}
 				>
 					<tspan x={tickProps.x}>
-						{tickProps.tickFormatter(tickProps.payload.value)}
+						{tickProps.tickFormatter!(
+							tickProps.payload.value,
+							tickProps.index,
+						)}
 					</tspan>
 				</text>
 			)}

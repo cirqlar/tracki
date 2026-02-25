@@ -1,9 +1,9 @@
 import {
 	useEffectEvent,
-	FormEventHandler,
 	useEffect,
 	useState,
 	Suspense,
+	SubmitEventHandler,
 } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -71,7 +71,7 @@ function RouteComponent() {
 		return !anyErrors;
 	};
 
-	const submit: FormEventHandler<HTMLFormElement> = async (e) => {
+	const submit: SubmitEventHandler<HTMLFormElement> = async (e) => {
 		e.preventDefault();
 
 		setShowErrors(false);
@@ -121,7 +121,7 @@ function RouteComponent() {
 					</Link>
 				</p>
 			</header>
-			{/* 
+			{/*
 			<div className="flex flex-col gap-2">
 				<label htmlFor="defDate-fieldLabel">Date & Time</label>
 				<Suspense fallback="Loading...">
